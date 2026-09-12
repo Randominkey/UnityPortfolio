@@ -1,0 +1,44 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 332b80d9f645e654da37f858ab60afde, type: 3}
+  m_Name: LessonOutline_Gonu
+  m_EditorClassIdentifier: MasterFramework.Core::MasterFramework.Navigation.LessonOutline
+  levelCode: Gonu
+  lessonId: Gonu_AI
+  steps:
+  - stepIndex: 0
+    actCode: ACT01
+    stepName: "1\uB2E8\uACC4: \uC720\uBD88\uB9AC \uD310\uBCC4 \uD37C\uC990 1"
+    isDynamicGeneration: 0
+    levelData: {fileID: 0}
+    stageTemplatePrefab: {fileID: 0}
+    stagePrefab: {fileID: 1106749964778958578, guid: 3cdceb0fceb7c2c4195f6e34e3563bbc, type: 3}
+    requiresVideo: 0
+    videoSlotIndex: -1
+  - stepIndex: 1
+    actCode: ACT02
+    stepName: "2\uB2E8\uACC4: \uC720\uBD88\uB9AC \uD310\uBCC4 \uD37C\uC990 2"
+    isDynamicGeneration: 0
+    levelData: {fileID: 0}
+    stageTemplatePrefab: {fileID: 0}
+    stagePrefab: {fileID: 1106749964778958578, guid: 3cdceb0fceb7c2c4195f6e34e3563bbc, type: 3}
+    requiresVideo: 0
+    videoSlotIndex: -1
+  - stepIndex: 2
+    actCode: ACT03
+    stepName: "3\uB2E8\uACC4: \uC6B0\uBB3C\uACE0\uB204 AI \uC2E4\uC804 \uB300\uC804"
+    isDynamicGeneration: 0
+    levelData: {fileID: 0}
+    stageTemplatePrefab: {fileID: 0}
+    stagePrefab: {fileID: 1106749964778958578, guid: 3cdceb0fceb7c2c4195f6e34e3563bbc, type: 3}
+    requiresVideo: 0
+    videoSlotIndex: -1

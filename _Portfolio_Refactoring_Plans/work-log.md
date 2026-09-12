@@ -1,0 +1,53 @@
+# WORK LOG: Refactoring Journey (Index)
+
+이 문서는 프로젝트의 전체 흐름을 세션 번호 기반으로 기록하는 인덱스입니다. 상세 내역은 `logs/log-sNNN.md` 파일을 참조하세요.
+
+---
+
+- **S047** (2026-09-08): Gen 2 챌린지 72종 대응 공용 포팅 어댑터(`UniversalMinigameStage` & `UniversalMinigameInstaller`) 및 SO 데이터 주입 아키텍처 수립, Month 35 High(시소 논리 퍼즐) 원본 하이어라키/데이터 SO 분리 이식 및 로비 씬(`LobbyScene.unity`) 4종 게임 목록 연동 완료 (컴파일 0건)
+- **S046** (2026-09-06): Gen 2 챌린지 퍼즐 역순 포팅 1탄(Month 36 High: 회로 만들기 퍼즐) 완결 - 포팅 규약(porting_guidelines_and_checklist.md)에 따라 원본 씬(Month36HighScene.unity)의 Stage1 하이어라키 및 비주얼 리소스(스프라이트/토글/버튼/팝업)를 100% 보존 추출하여 CircuitBuilding_BasePrefab.prefab 구축, 4개 Stage ScriptableObject 레벨 데이터, 폐곡선/기둥 룰 검증기(CircuitBuildingRuleValidator), Zenject SubContainer(GameObjectContext), PortfolioBuilderHelper 원클릭 빌드 도구 및 LobbyScene 3종 게임 통합 연동 완료 (컴파일 0건, 원본 룩앤필 보존 검증 완료)
+- **S045** (2026-09-06): Gen 2 Challenge Puzzle (Month01 ~ Month36, 72종) 대규모 임포트 대응 - 레거시 스텁 레이어(StageShim, PresenterShim, DataModelShim, NetworkShim, PopupShim, StampShim, MiniGameShim) 및 Noisy.Legacy.asmdef, DOTween.Modules.asmdef 격리 구축으로 100개 이상의 컴파일 에러 0건 종결 완결
+- **S044** (2026-09-03): 포팅 완료 2종 콘텐츠(Month 10 High, Why02 Week 11 고누 AI) 마스터 프레임워크 신규 표준 규격 마이그레이션 완료 (Zenject SubContainer GameObjectContext & Installer, asmdef 어셈블리 분리, GonuStageOrganizer / GonuRuleValidator / GonuAIService 리팩토링, PortfolioGameOutline SO 및 PortfolioBuilderHelper 자동화 빌드 성공, 컴파일 0건)
+- **S043** (2026-09-03): 포팅 전략 심층 분석 및 표준화 지침서(porting_guidelines_and_checklist.md) 전면 통합 개편, 물리적 패키징(.unitypackage & asmdef), 런타임 Base Prefab 스폰 & SO 주입, Zenject GameObjectContext 캡슐화 규격 정립, 기존 2종(Month 10 High, 고누 AI) 마이그레이션 로드맵 및 엣지 케이스 수립 완료
+- **S042** (2026-08-02): Month 10 High 레이아웃 크기 및 배치 타이밍 정렬 버그, 컴파일 오류 6종 긴급 해결, 로비 씬/복귀 흐름 및 공용 조작 강제 튜토리얼 템플릿 구현 완료
+- **S041** (2026-08-01): 장르별 템플릿-데이터 계층화 시스템 설계를 마스터 로더 및 인터페이스에 반영하고 포팅 가이드(next_session_guide.md) 작성 완료
+- **S040** (2026-07-19): Month 10 High 이식 프로젝트 완결에 따른 최종 walkthrough.md 갱신 및 차기 세션을 위한 수동 패키지 이관/자가 빌드 검사 프로토콜 가이드(next_session_guide.md) 수립 완료
+- **S039** (2026-07-19): 동적 스크롤 뷰의 Viewport에서 None 스프라이트로 인한 마스킹 투명화 버그를 RectMask2D 컴포넌트 교체로 완벽히 해결
+- **S038** (2026-07-19): 대시보드 토글 버튼의 Y축 좌표 오프셋을 -100에서 +50으로 정정하여 화면 바깥으로 잘려 클릭이 불가능하던 UI 오동작 해결
+- **S037** (2026-07-19): 유니티 최신 버전(Unity 6)의 내장 폰트 사양 변경에 맞추어 Arial.ttf 호출 오류를 LegacyRuntime.ttf로 일괄 정정해 ArgumentException 크래시 해결
+- **S036** (2026-07-19): LessonOutlineEditor(파일명 자동 이름 기입), UniversalStageManager 대시보드 텔레포트 주입, CompileAuditor.py(컴파일 오류 감사기) 소스 구현 완료 및 log-s036.md 아카이빙 완료
+- **S035** (2026-07-19): 사용자 피드백(마이그레이션 자동화, 컴파일 자가 치유 감사기, LessonOutline 커스텀 에디터 구축)을 해결하기 위한 3대 자동화 툴체인 기술 제안 및 대담 논의
+- **S034** (2026-07-19): Month 10 High 이식 완료에 따른 최종 walkthrough.md 작성 및 유니티 작업 피로도 소거를 위한 '협업 개선 아키텍처(Self-Resolving 패턴, 환경 사전 스캔)' 도출 완료
+- **S033** (2026-07-19): 기호 색상이 아닌 셀 자체의 배경 이미지(cellButton.image.color)에 연한 하늘색(PresetColor)을 칠하도록 구조적 교정 완료 및 log-s033.md 아카이빙 완료
+- **S032** (2026-07-19): 프리셋 프레임의 마우스 오버 X 아이콘 제거 및 깔린 셀들의 연한 하늘색(Preset) 전용 상태 색상 연출 추가 등 원본과 동일한 비주얼 세부 교정 완료
+- **S031** (2026-07-19): 사용자 런타임 피드백 3종(프리셋 프레임 삭제 방지, 복원 시 프레임 색상 정합성 수정, 성공/실패 시 공용 스탬프 서비스 연동)을 수렴하여 코드 리팩토링 및 log-s031.md 아카이빙 완료
+- **S030** (2026-07-19): 프로젝트 플레이어 설정이 New Input System으로 세팅되어 레거시 Input 사용 시 InvalidOperationException 크래시가 발생하는 문제를 Pointer.current.press API 대응으로 리팩토링해 해결
+- **S029** (2026-07-19): 인스펙터 수동 드래그 할당 문제를 해결하기 위해 PlayableRectSquareCell.cs의 Awake 수명주기에서 자식 Image를 자동으로 찾아 매핑하는 로직 구현 및 log-s029.md 아카이빙 완료
+- **S028** (2026-07-19): 빈 칸(Empty Cell)에 기호 이미지가 매핑되지 않았을 때 발생하는 PlayableRectSquareCell.cs의 NullReferenceException 오류 방어 코드 추가로 해결
+- **S027** (2026-07-19): Month 10 High 이식의 최종 C단계(Stage 컴포넌트 스왑 및 인스펙터 바인딩, LessonOutline 등록) 가이드 제시
+- **S026** (2026-07-19): 다중 선택 일괄 바인딩 한계점에 대한 정정 팁을 포함하여, B단계(Frame 프리팹 컴포넌트 교체 및 설정) 가이드 제시
+- **S025** (2026-07-16): Month10High 이식을 위한 원본 리소스 및 씬 마이그레이션(가져오기) 절차를 안내하고 Cell 컴포넌트 스왑 가이드 제시
+- **S024** (2026-07-11): PlayableMonth10HighStage 컴파일 수정 후 발생한 유니티 Domain Reload 무한 프리징 오류의 원인 진단 및 에디터 강제 재부팅/Library 캐시 제거 해결 가이드 제시
+- **S023** (2026-07-11): Month 10 High 퍼즐 이식을 위한 C# 핵심 소스코드 5종(RectSquareRuleValidator, GridSystem, Cell, Frame, Stage) 신규 작성 및 task.md 갱신 완료
+- **S022** (2026-07-11): 사용자 피드백(클릭 시 소멸 가능함)을 반영하여 Month 10 High 보고서의 프레임 고정 표현을 '영구 고정'에서 '반영구 고정'으로 정교하게 교정
+- **S021** (2026-07-11): Month10HighScene 씬 및 스크립트 유효성 검증 완료, 직사각형/정사각형 격자 분할 퍼즐에 대한 정밀 분석 보고서(month-10-high.md) 작성
+- **S020** (2026-07-08): 사용자 주도의 분석 부담을 없애고 AI가 코드를 직접 분석하여 기억을 되살려주는 "AI 주도 코드 아케올로지" 워크플로우(collaboration_workflow_refinement.md) 정립
+- **S019** (2026-07-08): 9레벨 5주차 등 보고서의 분석 결함(더미 스크립트 Stick 탐색 실패, 기획 테마 설명 부실)을 진단하고, 에셋 GUID 크로스 스캐너 및 테마 수동 보강 계획(audit_quality_recovery_plan.md) 수립
+- **S018** (2026-07-08): 사용자 피드백을 기반으로 복잡도 대비 활용도가 낮은 기하학 검증의 순위를 내리고, 자성/피벗 인터랙션 및 게이미피케이션 AI 알고리즘을 우선하는 신규 추출 로드맵(refactoring_priorities_proposal.md) 작성
+- **S017** (2026-07-08): MockStateStage의 가상 테스트 데이터 프로퍼티가 유니티 인스펙터에 노출되지 않던 현상을 직렬화 필드(Backing Field) 구조로 리팩토링하여 해결
+- **S016** (2026-07-07): /grill-me 인터뷰를 통한 공용 튜토리얼 템플릿(조작 잠금, 좌표 변환, 인터랙션 검증) 의사결정 수립 및 뼈대 설계안(tutorial_template_proposal.md) 업데이트
+- **S015** (2026-07-05): 코드 명명 규칙 교정 및 manifest.json 수정(Extenject 9.1.0 다운그레이드)을 통해 유니티 세이프 모드 및 컴파일 에러 일괄 해결, 샌드박스 씬 구성 가이드 작성
+- **S014** (2026-06-30): 사용자 피드백을 반영하여 Gen 3의 분석 초점을 클라이언트 콘텐츠 흐름(5단계 학습 시퀀스)으로 전면 재수정하고, 동적 로딩 시의 조작 데이터 보존을 위해 메멘토 패턴 기반의 '스테이지 상태 직렬화 및 복원' 사양을 추가 설계하여 마스터 명세서 갱신 완료
+- **S013** (2026-06-28): 플레이어블 씬의 오프라인 실행을 위한 공용 서비스 Mock 구현체 추가 및 의존성 주입을 위한 FrameworkSceneInstaller 구축 완료
+- **S012** (2026-06-27): 규칙 판정(IRuleValidator) 및 공용 서비스(Sound, Popup) 인터페이스 구축, 플레이어블 씬 구동용 베이스 템플릿(BaseStageOrganizer, BasePageOrganizer) 작성 완료
+- **S011** (2026-06-27): Phase 1 (Master Framework Design) 착수. API, Lifecycle, Interaction 영역 코어 인터페이스 및 C# 뼈대 스크립트 작성 완료 (UniversalStageManager, LessonOutline 포함)
+- **S010** (2026-06-27): Gen 1~3 세대 통합 종합 진화 분석 보고서 작성 및 Phase 0 (Audit) 단계 공식 종료, Phase 1 (Master Framework Design) 진입 로드맵 갱신
+- **S009** (2026-06-24): Gen 2 도전퍼즐(ChallengePuzzle Month 01-36, 총 72개 주차) 코드 분석 기반 정밀 보고서 일괄 생성 완료 (Node.js C# 정적 분석 파서 적용)
+- **S008** (2026-06-22): Gen 2 수학퍼즐(Why07~WhyE, 총 60개 주차) 코드 분석 기반 정밀 보고서 일괄 재생성 완료 (Node.js C# 정적 분석 파서 적용)
+- **S007** (2026-06-10): Why08/09/WhyC/WhyE 전 주차 전수 조사 및 개별 보고서 작성 완료 (총 72개 주차), Gen 1 종합 보고서 수립 계획 수립
+- **S006** (2026-06-10): Why07/Why02 전 주차 및 Why08 01-08 분석 완료 (3D 블록, 육각형 그리드 등)
+- **S005** (2026-06-10): 로그 시스템 효율화 (Hybrid Logging) 및 Why07 Week 07 분석 완료
+- **S004** (2026-06-10): Why07 Week 06 분석 완료 (Sliding Quiz 시스템 구조 파악)
+- **S003** (2026-06-09): Deep Audit 확장 규약 수립 및 Week 04 분석
+- **S002** (2026-06-05): Gen 1-3 세대별 핵심 아키텍처 진화 과정 분석
+- **S001** (2026-06-05): 협업 프로토콜 및 초기 아카이빙 체계 구축

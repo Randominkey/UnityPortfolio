@@ -1,0 +1,21 @@
+{
+    "name": "MasterFramework.Playable.Common",
+    "rootNamespace": "MasterFramework.Playable.Common",
+    "references": [
+        "MasterFramework.Core",
+        "Zenject",
+        "UniRx",
+        "UniTask",
+        "Unity.TextMeshPro",
+        "Noisy.Legacy"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

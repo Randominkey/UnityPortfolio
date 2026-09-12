@@ -1,0 +1,23 @@
+{
+    "name": "Noisy.Legacy",
+    "rootNamespace": "",
+    "references": [
+        "Zenject",
+        "UniRx",
+        "UniTask",
+        "Unity.TextMeshPro",
+        "DOTween.Modules",
+        "Unity.InputSystem"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "DOTween.dll"
+    ],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

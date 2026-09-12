@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 45e683b72d6ed854a8faa19f5fe9cf1c, type: 3}
+  m_Name: GameOutline_Month35High
+  m_EditorClassIdentifier: MasterFramework.Core::MasterFramework.Navigation.PortfolioGameOutline
+  gameId: Seesaw_Balance
+  gameTitle: "\uC2DC\uC18C \uADE0\uD615 \uB17C\uB9AC \uD37C\uC990"
+  subtitle: Seesaw Balance Logic Puzzle
+  systemSummary: "\uC9C0\uB808 \uBAA8\uBA58\uD2B8(\uAC70\uB9AC \xD7 \uBB34\uAC8C)\uC5D0
+    \uB530\uB978 \uC218\uD3C9 \uD3C9\uD615 \uACF5\uC2DD\uACFC \uD589/\uC5F4/\uD504\uB808\uC784
+    \uC81C\uC57D \uC870\uAC74\uC5D0 \uB9DE\uCDB0 \uC22B\uC790 \uBE14\uB85D\uC744
+    \uBC30\uCE58\uD558\uB294 \uACA9\uC790 \uB17C\uB9AC \uD37C\uC990\uC785\uB2C8\uB2E4."
+  featurePoints:
+  - "\uC9C0\uB808 \uBAA8\uBA58\uD2B8(\uAC70\uB9AC \xD7 \uBB34\uAC8C) \uACC4\uC0B0
+    \uAE30\uBC18 \uC2E4\uC2DC\uAC04 \uC218\uD3C9 \uADE0\uD615 \uD310\uC815"
+  - "\uACA9\uC790\uD615 \uD0A4\uD328\uB4DC \uC785\uB825, \uD589/\uC5F4/\uD504\uB808\uC784
+    \uC81C\uC57D \uAC80\uC99D \uBC0F Auto-Solve"
+  generationTag: Logic Puzzle
+  hasAutoSolve: 1
+  totalStages: 4
+  thumbnail: {fileID: 0}
+  lessonOutline: {fileID: 11400000, guid: a955e2fbb7fa8724288a962ec2f0784c, type: 2}

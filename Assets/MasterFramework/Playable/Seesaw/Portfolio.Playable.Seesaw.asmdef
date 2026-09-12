@@ -1,0 +1,22 @@
+{
+    "name": "Portfolio.Playable.Seesaw",
+    "rootNamespace": "Portfolio.Playable.Seesaw",
+    "references": [
+        "MasterFramework.Core",
+        "MasterFramework.Navigation",
+        "Zenject",
+        "UniRx",
+        "UniTask",
+        "Unity.TextMeshPro",
+        "Noisy.Legacy"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

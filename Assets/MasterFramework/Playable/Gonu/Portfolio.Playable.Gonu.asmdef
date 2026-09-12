@@ -1,0 +1,20 @@
+{
+    "name": "Portfolio.Playable.Gonu",
+    "rootNamespace": "Portfolio.Playable.Gonu",
+    "references": [
+        "MasterFramework.Core",
+        "MasterFramework.Navigation",
+        "Zenject",
+        "UniRx",
+        "UniTask"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
