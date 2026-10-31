@@ -156,7 +156,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 330685551}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 33f971da8dd41184db0b07a94b1e9a9d, type: 3}
+  m_Script: {fileID: 11500000, guid: 25446508c1ed1564da546f0231063d8f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &330685553
@@ -343,7 +343,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1278447114}
   - component: {fileID: 1278447113}
-  - component: {fileID: 1278447112}
+  - component: {fileID: 1278447115}
   m_Layer: 0
   m_Name: EventSystem
   m_TagString: Untagged
@@ -351,26 +351,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1278447112
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1278447111}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4f231c4fb786f3946a6b90b886c48677, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_SendPointerHoverToParent: 1
-  m_HorizontalAxis: Horizontal
-  m_VerticalAxis: Vertical
-  m_SubmitButton: Submit
-  m_CancelButton: Cancel
-  m_InputActionsPerSecond: 10
-  m_RepeatDelay: 0.5
-  m_ForceModuleActive: 0
 --- !u!114 &1278447113
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -401,6 +381,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1278447115
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1278447111}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 01614664b831546d2ae94a42149d80ac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.InputSystem::UnityEngine.InputSystem.UI.InputSystemUIInputModule
+  m_SendPointerHoverToParent: 1
+  m_MoveRepeatDelay: 0.5
+  m_MoveRepeatRate: 0.1
+  m_XRTrackingOrigin: {fileID: 0}
+  m_ActionsAsset: {fileID: -944628639613478452, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_PointAction: {fileID: -1654692200621890270, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_MoveAction: {fileID: -8784545083839296357, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_SubmitAction: {fileID: 392368643174621059, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_CancelAction: {fileID: 7727032971491509709, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_LeftClickAction: {fileID: 3001919216989983466, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_MiddleClickAction: {fileID: -2185481485913320682, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_RightClickAction: {fileID: -4090225696740746782, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_ScrollWheelAction: {fileID: 6240969308177333660, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_TrackedDevicePositionAction: {fileID: 6564999863303420839, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_TrackedDeviceOrientationAction: {fileID: 7970375526676320489, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_DeselectOnBackgroundClick: 1
+  m_PointerBehavior: 0
+  m_CursorLockBehavior: 0
+  m_ScrollDeltaPerTick: 6
 --- !u!1 &1311070085
 GameObject:
   m_ObjectHideFlags: 0
@@ -631,24 +642,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a02516041315614fba0b445ef2f890c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mainCamera: {fileID: 1562276313}
-  tabManager: {fileID: 0}
-  rawImages: []
-  guideDuration: 3
-  guideFontSize: 30
-  pageNumbers:
-  - "\uC124\uCE58\uD55C \uC815\uC0AC\uAC01\uD615 \uB610\uB294\n\uC9C1\uC0AC\uAC01\uD615\uC744
-    \uD074\uB9AD\uD574\uC11C\n\uC5C6\uC568 \uC218 \uC788\uC5B4\uC694!"
-  - "\uC124\uCE58\uD55C \uC815\uC0AC\uAC01\uD615 \uB610\uB294\n\uC9C1\uC0AC\uAC01\uD615\uC744
-    \uD074\uB9AD\uD574\uC11C\n\uC5C6\uC568 \uC218 \uC788\uC5B4\uC694!"
-  - "\uC124\uCE58\uD55C \uC815\uC0AC\uAC01\uD615 \uB610\uB294\n\uC9C1\uC0AC\uAC01\uD615\uC744
-    \uD074\uB9AD\uD574\uC11C\n\uC5C6\uC568 \uC218 \uC788\uC5B4\uC694!"
-  - "\uC124\uCE58\uD55C \uC815\uC0AC\uAC01\uD615 \uB610\uB294\n\uC9C1\uC0AC\uAC01\uD615\uC744
-    \uD074\uB9AD\uD574\uC11C\n\uC5C6\uC568 \uC218 \uC788\uC5B4\uC694!"
-  hasStageClearList: 
-  stageOrganizers: []
-  currentStageOrganizer: {fileID: 0}
-  drawingComponent: {fileID: 0}
 --- !u!1 &1849492746
 GameObject:
   m_ObjectHideFlags: 0

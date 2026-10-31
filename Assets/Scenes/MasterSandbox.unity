@@ -677,7 +677,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 844c9ab8fc40ee947aae92e16a18b11b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MasterFramework.Navigation.UniversalStageManager
-  lessonOutline: {fileID: 11400000, guid: a955e2fbb7fa8724288a962ec2f0784c, type: 2}
+  lessonOutline: {fileID: 11400000, guid: a849a0eb6c4e1a04fbd1657a52f28dd6, type: 2}
   contentRoot: {fileID: 1273879813}
   defaultTemplatePrefab: {fileID: 0}
 --- !u!4 &1564623118

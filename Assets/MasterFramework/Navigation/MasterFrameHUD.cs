@@ -28,6 +28,8 @@ namespace MasterFramework.Navigation
         [SerializeField] private Button undoButton;
         [SerializeField] private Button redoButton;
         [SerializeField] private Button soundButton;
+        [SerializeField] private Button checkAnswerButton;
+        [SerializeField] private Toggle autoClearToggle;
 
         private readonly List<Button> _tabButtons = new List<Button>();
         private readonly List<Image> _tabBackgrounds = new List<Image>();
@@ -43,6 +45,8 @@ namespace MasterFramework.Navigation
         public Action OnUndoClicked { get; set; }
         public Action OnRedoClicked { get; set; }
         public Action OnSoundToggleClicked { get; set; }
+        public Action OnCheckAnswerClicked { get; set; }
+        public Action<bool> OnAutoClearToggled { get; set; }
 
         private Font _defaultFont;
 
@@ -123,6 +127,26 @@ namespace MasterFramework.Navigation
                     .AddTo(_disposables);
             }
 
+            if (checkAnswerButton != null)
+            {
+                checkAnswerButton.OnClickAsObservable()
+                    .ThrottleFirst(TimeSpan.FromSeconds(0.3f))
+                    .Subscribe(_ => OnCheckAnswerClicked?.Invoke())
+                    .AddTo(_disposables);
+            }
+
+            if (autoClearToggle != null)
+            {
+                autoClearToggle.onValueChanged
+                    .AsObservable()
+                    .Subscribe(isOn =>
+                    {
+                        OnAutoClearToggled?.Invoke(isOn);
+                        SetCheckAnswerInteractable(!isOn);
+                    })
+                    .AddTo(_disposables);
+            }
+
             // 4. 스텝 탭 생성
             BuildStepTabs(gameOutline != null ? gameOutline.gameId : "Default", outline, currentStepIndex);
         }
@@ -152,12 +176,119 @@ namespace MasterFramework.Navigation
                 if (ruleButton != null) btnGo.transform.SetSiblingIndex(ruleButton.transform.GetSiblingIndex());
             }
 
+            if (autoClearToggle == null)
+            {
+                var toggleGo = CreateToolbarToggle(toolbarContainer, "AutoClearToggle", "⚡ 상시 정답 확인", new Vector2(125, 32));
+                autoClearToggle = toggleGo.GetComponent<Toggle>();
+                if (ruleButton != null) toggleGo.transform.SetSiblingIndex(ruleButton.transform.GetSiblingIndex());
+            }
+
+            if (checkAnswerButton == null)
+            {
+                var btnGo = CreateToolbarButton(toolbarContainer, "CheckAnswerButton", "✓ 정답 확인", new Vector2(96, 32), new Color32(37, 99, 235, 230));
+                checkAnswerButton = btnGo.GetComponent<Button>();
+                if (ruleButton != null) btnGo.transform.SetSiblingIndex(ruleButton.transform.GetSiblingIndex());
+            }
+
             if (soundButton == null)
             {
                 var btnGo = CreateToolbarButton(toolbarContainer, "SoundButton", "🔊", new Vector2(40, 32), new Color32(30, 41, 59, 230));
                 soundButton = btnGo.GetComponent<Button>();
                 _soundButtonText = btnGo.GetComponentInChildren<Text>();
                 btnGo.transform.SetAsLastSibling();
+            }
+        }
+
+        private GameObject CreateToolbarToggle(Transform parent, string name, string label, Vector2 size)
+        {
+            GameObject go = new GameObject(name, typeof(RectTransform), typeof(CanvasRenderer), typeof(Image), typeof(Toggle), typeof(CanvasGroup));
+            go.transform.SetParent(parent, false);
+            var rt = go.GetComponent<RectTransform>();
+            rt.sizeDelta = size;
+
+            var bgImg = go.GetComponent<Image>();
+            bgImg.color = new Color32(30, 41, 59, 230);
+
+            var outline = go.AddComponent<Outline>();
+            outline.effectColor = new Color32(51, 65, 85, 200);
+            outline.effectDistance = new Vector2(1, -1);
+
+            var toggle = go.GetComponent<Toggle>();
+            toggle.targetGraphic = bgImg;
+
+            // Checkmark glow
+            GameObject checkmarkGo = new GameObject("Checkmark", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+            checkmarkGo.transform.SetParent(go.transform, false);
+            var cmRt = checkmarkGo.GetComponent<RectTransform>();
+            cmRt.anchorMin = Vector2.zero;
+            cmRt.anchorMax = Vector2.one;
+            cmRt.sizeDelta = Vector2.zero;
+            var cmImg = checkmarkGo.GetComponent<Image>();
+            cmImg.color = new Color32(16, 185, 129, 65);
+            toggle.graphic = cmImg;
+
+            // Text Label
+            GameObject textGo = new GameObject("Text", typeof(RectTransform), typeof(CanvasRenderer), typeof(Text));
+            textGo.transform.SetParent(go.transform, false);
+            var textRt = textGo.GetComponent<RectTransform>();
+            textRt.anchorMin = Vector2.zero;
+            textRt.anchorMax = Vector2.one;
+            textRt.sizeDelta = Vector2.zero;
+
+            var txt = textGo.GetComponent<Text>();
+            txt.font = _defaultFont;
+            txt.text = label;
+            txt.fontSize = 13;
+            txt.fontStyle = FontStyle.Bold;
+            txt.color = new Color32(226, 232, 240, 255);
+            txt.alignment = TextAnchor.MiddleCenter;
+            txt.raycastTarget = false;
+
+            toggle.isOn = false;
+            return go;
+        }
+
+        public void SetCheckAnswerInteractable(bool interactable)
+        {
+            if (checkAnswerButton != null)
+            {
+                checkAnswerButton.interactable = interactable;
+                var img = checkAnswerButton.GetComponent<Image>();
+                if (img != null)
+                {
+                    img.color = interactable ? new Color32(37, 99, 235, 230) : new Color32(51, 65, 85, 120);
+                }
+                var txt = checkAnswerButton.GetComponentInChildren<Text>();
+                if (txt != null)
+                {
+                    txt.color = interactable ? Color.white : new Color(1f, 1f, 1f, 0.4f);
+                }
+            }
+        }
+
+        public void SetAutoClearToggle(bool isOn)
+        {
+            if (autoClearToggle != null && autoClearToggle.isOn != isOn)
+            {
+                autoClearToggle.isOn = isOn;
+            }
+            SetCheckAnswerInteractable(!isOn);
+        }
+
+        public void SetAutoClearToggleInteractable(bool interactable)
+        {
+            if (autoClearToggle != null)
+            {
+                autoClearToggle.interactable = interactable;
+                var canvasGroup = autoClearToggle.GetComponent<CanvasGroup>();
+                if (canvasGroup == null)
+                {
+                    canvasGroup = autoClearToggle.gameObject.AddComponent<CanvasGroup>();
+                }
+                if (canvasGroup != null)
+                {
+                    canvasGroup.alpha = interactable ? 1.0f : 0.4f;
+                }
             }
         }
 

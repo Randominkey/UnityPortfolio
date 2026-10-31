@@ -1,0 +1,22 @@
+{
+    "name": "Portfolio.Playable.Month35High",
+    "rootNamespace": "Portfolio.Playable.Month35High",
+    "references": [
+        "MasterFramework.Core",
+        "MasterFramework.Navigation",
+        "Zenject",
+        "UniRx",
+        "UniTask",
+        "Unity.TextMeshPro",
+        "Noisy.Legacy"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

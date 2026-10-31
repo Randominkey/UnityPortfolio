@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 45e683b72d6ed854a8faa19f5fe9cf1c, type: 3}
+  m_Name: GameOutline_Month34High
+  m_EditorClassIdentifier: MasterFramework.Core::MasterFramework.Navigation.PortfolioGameOutline
+  gameId: Month34High
+  gameTitle: "\uC22B\uC790 \uC12C \uB098\uB204\uAE30 \uD37C\uC990"
+  subtitle: Number Island
+  systemSummary: "육지 타일들을 FloodFill 탐색하여 직사각형 섬 네트워크로 분할하는 퍼즐입니다."
+  featurePoints:
+  - "FloodFill BFS 탐색"
+  - "2x2 풀 방지 검증"
+  generationTag: Gen 2 Minigame
+  hasAutoSolve: 1
+  totalStages: 4
+  thumbnail: {fileID: 0}
+  lessonOutline: {fileID: 11400000, guid: 5d84bce6280027e4b8c1bed017b291a7, type: 2}

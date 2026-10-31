@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 332b80d9f645e654da37f858ab60afde, type: 3}
   m_Name: LessonOutline_Month35High
   m_EditorClassIdentifier: MasterFramework.Core::MasterFramework.Navigation.LessonOutline
-  levelCode: Seesaw
-  lessonId: Seesaw_Balance
+  levelCode: 
+  lessonId: Month35High
   steps:
   - stepIndex: 0
     actCode: ACT01

@@ -1,0 +1,19 @@
+{
+    "name": "Portfolio.Why02.Gonu",
+    "rootNamespace": "Portfolio.Why02.Gonu",
+    "references": [
+        "MasterFramework.Core",
+        "Zenject",
+        "UniRx",
+        "UniTask"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

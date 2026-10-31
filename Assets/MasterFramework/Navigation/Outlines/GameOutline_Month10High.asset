@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 45e683b72d6ed854a8faa19f5fe9cf1c, type: 3}
+  m_Name: GameOutline_Month10High
+  m_EditorClassIdentifier: MasterFramework.Core::MasterFramework.Navigation.PortfolioGameOutline
+  gameId: Month10High
+  gameTitle: "\uC9C1\uC0AC\uAC01\uD615 \uBD84\uD560 \uD37C\uC990"
+  subtitle: Rectangle Division
+  systemSummary: "SO 데이터 기반 절차적 그리드 상에서 기호 종횡비 영역을 분할하는 퍼즐입니다."
+  featurePoints:
+  - "절차적 그리드 생성"
+  - "단위 검증 룰 분리"
+  generationTag: Gen 3 Puzzle
+  hasAutoSolve: 1
+  totalStages: 4
+  thumbnail: {fileID: 0}
+  lessonOutline: {fileID: 11400000, guid: a849a0eb6c4e1a04fbd1657a52f28dd6, type: 2}

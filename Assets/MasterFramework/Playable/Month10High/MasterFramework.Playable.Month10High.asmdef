@@ -1,0 +1,20 @@
+{
+    "name": "MasterFramework.Playable.Month10High",
+    "rootNamespace": "MasterFramework.Playable.Month10High",
+    "references": [
+        "MasterFramework.Core",
+        "Zenject",
+        "UniRx",
+        "UniTask",
+        "Unity.InputSystem"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

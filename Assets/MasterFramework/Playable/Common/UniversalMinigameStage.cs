@@ -20,10 +20,11 @@ namespace MasterFramework.Playable.Common
     /// </summary>
     [RequireComponent(typeof(GameObjectContext))]
     [RequireComponent(typeof(UniversalMinigameInstaller))]
-    public class UniversalMinigameStage : MonoBehaviour, IStageOrganizer, IStateRestorable, IUndoableStage
+    public class UniversalMinigameStage : MonoBehaviour, IStageOrganizer, IStateRestorable, IUndoableStage, ICheckableStage
     {
         [Header("Polymorphic Board Component (MiniGameBoardBase)")]
         [SerializeField] private MiniGameBoardBase board;
+        private bool _autoClear = false;
 
         [Header("UI Hierarchy References (Auto-Mapped)")]
         [SerializeField] private Button checkAnswerButton;
@@ -369,6 +370,9 @@ namespace MasterFramework.Playable.Common
             
             if (board != null)
             {
+                board.OnBoardEvaluated -= HandleBoardEvaluated;
+                board.OnBoardEvaluated += HandleBoardEvaluated;
+
                 var boardType = board.GetType();
                 const BindingFlags flags = BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public;
                 var keypadField = boardType.GetField("neoKeypadComponent", flags);
@@ -392,7 +396,43 @@ namespace MasterFramework.Playable.Common
             }
         }
 
-        private void OnCheckAnswerClicked()
+        /// <summary>
+        /// 보드에서 모든 계산(코루틴, 외곽 셀, 지레 등)이 완벽히 끝나고 IsCorrect가 최종 산출된 순간
+        /// 직접 호출되는 이벤트 핸들러입니다. 프레임 지연이나 어긋남 없이 정답 완성 즉시 1회성으로 반응합니다.
+        /// </summary>
+        private void HandleBoardEvaluated()
+        {
+            if (!_autoClear || board == null) return;
+
+            if (board.IsCorrect && !_isStageCleared.Value)
+            {
+                OnCheckAnswerClicked();
+            }
+            else if (!board.IsCorrect && _isStageCleared.Value)
+            {
+                _isStageCleared.Value = false;
+                stampService?.HideStamp();
+            }
+        }
+
+        #region ICheckableStage
+        public bool CheckAnswer()
+        {
+            OnCheckAnswerClicked();
+            return _isStageCleared.Value;
+        }
+
+        public void SetAutoClearMode(bool isAutoClear)
+        {
+            _autoClear = isAutoClear;
+            if (_autoClear && board != null)
+            {
+                HandleBoardEvaluated();
+            }
+        }
+        #endregion
+
+        public void OnCheckAnswerClicked()
         {
             if (board == null) return;
 
@@ -563,10 +603,15 @@ namespace MasterFramework.Playable.Common
             if (string.IsNullOrEmpty(stateData)) return;
             string[] solGrid = stateData.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
             ApplySolutionGrid(solGrid);
+            HandleBoardEvaluated();
         }
 
         private void OnDestroy()
         {
+            if (board != null)
+            {
+                board.OnBoardEvaluated -= HandleBoardEvaluated;
+            }
             disposables.Dispose();
         }
     }

@@ -1,0 +1,53 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 332b80d9f645e654da37f858ab60afde, type: 3}
+  m_Name: LessonOutline_Month34High
+  m_EditorClassIdentifier: MasterFramework.Core::MasterFramework.Navigation.LessonOutline
+  levelCode: 
+  lessonId: Month34High
+  steps:
+  - stepIndex: 0
+    actCode: ACT01
+    stepName: Stage 1 (8x8)
+    isDynamicGeneration: 1
+    levelData: {fileID: 11400000, guid: 9922e50aafd4f284bb7cfae388ae2c21, type: 2}
+    stageTemplatePrefab: {fileID: 5742937997457354801, guid: b9af1de68e9a4d741b030bb97ea6e66d, type: 3}
+    stagePrefab: {fileID: 5742937997457354801, guid: b9af1de68e9a4d741b030bb97ea6e66d, type: 3}
+    requiresVideo: 0
+    videoSlotIndex: -1
+  - stepIndex: 1
+    actCode: ACT02
+    stepName: Stage 2 (5x5)
+    isDynamicGeneration: 1
+    levelData: {fileID: 11400000, guid: bb12397db775c684c920f28ccdc7d735, type: 2}
+    stageTemplatePrefab: {fileID: 5742937997457354801, guid: b9af1de68e9a4d741b030bb97ea6e66d, type: 3}
+    stagePrefab: {fileID: 5742937997457354801, guid: b9af1de68e9a4d741b030bb97ea6e66d, type: 3}
+    requiresVideo: 0
+    videoSlotIndex: -1
+  - stepIndex: 2
+    actCode: ACT03
+    stepName: Stage 3 (6x6)
+    isDynamicGeneration: 1
+    levelData: {fileID: 11400000, guid: 2fa53669422da554fb05d278d37878ba, type: 2}
+    stageTemplatePrefab: {fileID: 5742937997457354801, guid: b9af1de68e9a4d741b030bb97ea6e66d, type: 3}
+    stagePrefab: {fileID: 5742937997457354801, guid: b9af1de68e9a4d741b030bb97ea6e66d, type: 3}
+    requiresVideo: 0
+    videoSlotIndex: -1
+  - stepIndex: 3
+    actCode: ACT04
+    stepName: Stage 4 (10x10)
+    isDynamicGeneration: 1
+    levelData: {fileID: 11400000, guid: ed4daa66651a8b24c9e098bccf1ed2ff, type: 2}
+    stageTemplatePrefab: {fileID: 5742937997457354801, guid: b9af1de68e9a4d741b030bb97ea6e66d, type: 3}
+    stagePrefab: {fileID: 5742937997457354801, guid: b9af1de68e9a4d741b030bb97ea6e66d, type: 3}
+    requiresVideo: 0
+    videoSlotIndex: -1

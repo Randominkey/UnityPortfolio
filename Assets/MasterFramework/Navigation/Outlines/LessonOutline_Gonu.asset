@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 332b80d9f645e654da37f858ab60afde, type: 3}
   m_Name: LessonOutline_Gonu
   m_EditorClassIdentifier: MasterFramework.Core::MasterFramework.Navigation.LessonOutline
-  levelCode: Gonu
-  lessonId: Gonu_AI
+  levelCode: Gen2_Why02
+  lessonId: Why02_Week11_Gonu
   steps:
   - stepIndex: 0
     actCode: ACT01
@@ -35,7 +35,16 @@ MonoBehaviour:
     videoSlotIndex: -1
   - stepIndex: 2
     actCode: ACT03
-    stepName: "3\uB2E8\uACC4: \uC6B0\uBB3C\uACE0\uB204 AI \uC2E4\uC804 \uB300\uC804"
+    stepName: "3\uB2E8\uACC4: \uC6B0\uBB3C\uACE0\uB204 AI \uC2E4\uC804 \uB300\uC804 (3:3)"
+    isDynamicGeneration: 0
+    levelData: {fileID: 0}
+    stageTemplatePrefab: {fileID: 0}
+    stagePrefab: {fileID: 1106749964778958578, guid: 3cdceb0fceb7c2c4195f6e34e3563bbc, type: 3}
+    requiresVideo: 0
+    videoSlotIndex: -1
+  - stepIndex: 3
+    actCode: ACT04
+    stepName: "4\uB2E8\uACC4: 4:4 \uD655\uC7A5 \uC2E4\uC804 \uB300\uC804"
     isDynamicGeneration: 0
     levelData: {fileID: 0}
     stageTemplatePrefab: {fileID: 0}

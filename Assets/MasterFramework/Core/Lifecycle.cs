@@ -57,4 +57,14 @@ namespace MasterFramework.Core
         string SerializeState();
         void DeserializeAndRestoreState(string stateData);
     }
+
+    /// <summary>
+    /// 수동 정답 검증 및 실시간 자동 클리어 토글 모드를 지원하는 스테이지 규약
+    /// </summary>
+    public interface ICheckableStage
+    {
+        bool CheckAnswer();
+        void SetAutoClearMode(bool isAutoClear);
+        bool SupportsAutoClear => true;
+    }
 }

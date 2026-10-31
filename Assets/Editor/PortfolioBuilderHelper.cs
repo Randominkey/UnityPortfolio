@@ -3,9 +3,8 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 using MasterFramework.Playable.Month10High;
-using Portfolio.Playable.Gonu;
-using Portfolio.Playable.Month36High;
-using Portfolio.Playable.Seesaw;
+using MasterFramework.Playable.Month34High;
+using Portfolio.Why02.Gonu;
 using MasterFramework.Navigation;
 using MasterFramework.Core;
 using System.Collections.Generic;
@@ -21,7 +20,8 @@ namespace MasterFramework.Editor
             BuildCellPrefab();
             BuildUniversalStagePrefab();
             BuildGonuStagePrefab();
-            BuildMonth36HighAssets();
+            BuildMonth34HighAssets();
+            ModernizeMonth35HighUI();
             BuildStandaloneLessonOutlines();
             BuildGameOutlines();
             SetupScenesAndBuildSettings();
@@ -84,41 +84,16 @@ namespace MasterFramework.Editor
             gridLayout.childAlignment = TextAnchor.MiddleCenter;
             gridLayout.constraint = GridLayoutGroup.Constraint.FixedColumnCount;
             
-            GameObject buttonGo = new GameObject("CheckAnswerButton", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image), typeof(Button));
-            buttonGo.transform.SetParent(go.transform, false);
-            var btnRt = buttonGo.GetComponent<RectTransform>();
-            btnRt.anchorMin = new Vector2(0.5f, 0f);
-            btnRt.anchorMax = new Vector2(0.5f, 0f);
-            btnRt.anchoredPosition = new Vector2(0, 40);
-            btnRt.sizeDelta = new Vector2(160, 50);
-            
-            var btnImg = buttonGo.GetComponent<Image>();
-            btnImg.color = new Color(0.2f, 0.6f, 0.85f, 1f);
-            
-            GameObject btnTextGo = new GameObject("Text", typeof(RectTransform), typeof(CanvasRenderer), typeof(Text));
-            btnTextGo.transform.SetParent(buttonGo.transform, false);
-            var txtRt = btnTextGo.GetComponent<RectTransform>();
-            txtRt.anchorMin = Vector2.zero;
-            txtRt.anchorMax = Vector2.one;
-            txtRt.sizeDelta = Vector2.zero;
-            var txt = btnTextGo.GetComponent<Text>();
-            txt.text = "정답 확인";
-            txt.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
-            txt.fontSize = 20;
-            txt.fontStyle = FontStyle.Bold;
-            txt.alignment = TextAnchor.MiddleCenter;
-            txt.color = Color.white;
-            
             var stage = go.GetComponent<UniversalPlayableStage>();
             var serializedStage = new SerializedObject(stage);
             
             var cellPrefab = AssetDatabase.LoadAssetAtPath<PlayableRectSquareCell>("Assets/MasterFramework/Playable/Month10High/AnyResources/PlayableRectSquareCell.prefab");
-            var framePrefab = AssetDatabase.LoadAssetAtPath<PlayableRectSquareFrame>("Assets/MasterFramework/Playable/Month10High/AnyResources/Prefabs/Frame.prefab");
+            var framePrefab = AssetDatabase.LoadAssetAtPath<PlayableRectSquareFrame>("Assets/MasterFramework/Playable/Month10High/AnyResources/PlayableRectSquareFrame.prefab");
             
             serializedStage.FindProperty("cellPrefab").objectReferenceValue = cellPrefab;
             serializedStage.FindProperty("framePrefab").objectReferenceValue = framePrefab;
             serializedStage.FindProperty("cellParent").objectReferenceValue = cpRt;
-            serializedStage.FindProperty("checkAnswerButton").objectReferenceValue = buttonGo.GetComponent<Button>();
+            serializedStage.FindProperty("checkAnswerButton").objectReferenceValue = null;
             
             serializedStage.ApplyModifiedProperties();
             
@@ -174,10 +149,13 @@ namespace MasterFramework.Editor
             monoInstallersProp.GetArrayElementAtIndex(0).objectReferenceValue = installer;
             serializedCtx.ApplyModifiedProperties();
 
-            string targetFolder = "Assets/MasterFramework/Playable/Gonu";
+            // 이전 회사 IP 캐릭터 스프라이트 제거 및 모던 턴 인디케이터 UI로 교체
+            CleanAndModernizePlayerToggles(instance);
+
+            string targetFolder = "Assets/MasterFramework/Playable/Why02_Gonu";
             if (!AssetDatabase.IsValidFolder(targetFolder))
             {
-                AssetDatabase.CreateFolder("Assets/MasterFramework/Playable", "Gonu");
+                AssetDatabase.CreateFolder("Assets/MasterFramework/Playable", "Why02_Gonu");
             }
             string destPath = $"{targetFolder}/GonuStage_BasePrefab.prefab";
             PrefabUtility.SaveAsPrefabAsset(instance, destPath);
@@ -186,172 +164,379 @@ namespace MasterFramework.Editor
             Debug.Log("[PortfolioBuilderHelper] Gonu Base Prefab cleaned and saved successfully at: " + destPath);
         }
 
-        [MenuItem("MasterFramework/Build Month 36 High Assets")]
-        public static void BuildMonth36HighAssets()
+        private static void CleanAndModernizePlayerToggles(GameObject instance)
         {
-            string folderPath = "Assets/MasterFramework/Playable/Month36High";
+            Font defaultFont = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+
+            Transform pt0 = instance.transform.Find("PlayerToggle0");
+            Transform pt1 = instance.transform.Find("PlayerToggle1");
+
+            if (pt0 != null)
+            {
+                SetupPlayerCard(pt0, "1P  PLAYER", "● 선공 (내 턴)", new Color32(37, 99, 235, 255), defaultFont);
+            }
+
+            if (pt1 != null)
+            {
+                SetupPlayerCard(pt1, "2P  AI OPPONENT", "○ 후공 (인공지능)", new Color32(225, 29, 72, 255), defaultFont);
+            }
+        }
+
+        private static void SetupPlayerCard(Transform pt, string title, string sub, Color32 themeColor, Font font)
+        {
+            var rt = pt.GetComponent<RectTransform>();
+            rt.sizeDelta = new Vector2(280, 160);
+
+            Transform offTrans = pt.Find(pt.name.Replace("PlayerToggle", "PlayerToggleOff"));
+            Transform onTrans = offTrans != null ? offTrans.Find(pt.name.Replace("PlayerToggle", "PlayerToggleOn")) : null;
+
+            if (offTrans != null)
+            {
+                var offRt = offTrans.GetComponent<RectTransform>();
+                offRt.anchorMin = Vector2.zero;
+                offRt.anchorMax = Vector2.one;
+                offRt.sizeDelta = Vector2.zero;
+
+                var offImg = offTrans.GetComponent<Image>();
+                var serializedOffImg = new SerializedObject(offImg);
+                serializedOffImg.FindProperty("m_Sprite").objectReferenceValue = null;
+                serializedOffImg.ApplyModifiedProperties();
+                offImg.color = new Color32(18, 24, 38, 230); // Dark sleek slate
+
+                var outline = offTrans.GetComponent<Outline>() ?? offTrans.gameObject.AddComponent<Outline>();
+                outline.effectColor = new Color32(51, 65, 85, 200);
+                outline.effectDistance = new Vector2(2, -2);
+
+                // Text title
+                Transform titleTrans = offTrans.Find("TitleText");
+                GameObject titleGo = titleTrans != null ? titleTrans.gameObject : new GameObject("TitleText", typeof(RectTransform), typeof(CanvasRenderer), typeof(Text));
+                titleGo.transform.SetParent(offTrans, false);
+                var tRt = titleGo.GetComponent<RectTransform>();
+                tRt.anchorMin = new Vector2(0.05f, 0.48f);
+                tRt.anchorMax = new Vector2(0.95f, 0.92f);
+                tRt.sizeDelta = Vector2.zero;
+                var tTxt = titleGo.GetComponent<Text>();
+                tTxt.font = font;
+                tTxt.text = title;
+                tTxt.fontSize = 20;
+                tTxt.fontStyle = FontStyle.Bold;
+                tTxt.color = Color.white;
+                tTxt.alignment = TextAnchor.MiddleCenter;
+
+                // Text subtitle
+                Transform subTrans = offTrans.Find("SubText");
+                GameObject subGo = subTrans != null ? subTrans.gameObject : new GameObject("SubText", typeof(RectTransform), typeof(CanvasRenderer), typeof(Text));
+                subGo.transform.SetParent(offTrans, false);
+                var sRt = subGo.GetComponent<RectTransform>();
+                sRt.anchorMin = new Vector2(0.05f, 0.12f);
+                sRt.anchorMax = new Vector2(0.95f, 0.48f);
+                sRt.sizeDelta = Vector2.zero;
+                var sTxt = subGo.GetComponent<Text>();
+                sTxt.font = font;
+                sTxt.text = sub;
+                sTxt.fontSize = 15;
+                sTxt.fontStyle = FontStyle.Normal;
+                sTxt.color = new Color32(148, 163, 184, 255);
+                sTxt.alignment = TextAnchor.MiddleCenter;
+            }
+
+            if (onTrans != null)
+            {
+                var onRt = onTrans.GetComponent<RectTransform>();
+                onRt.anchorMin = Vector2.zero;
+                onRt.anchorMax = Vector2.one;
+                onRt.sizeDelta = Vector2.zero;
+
+                var onImg = onTrans.GetComponent<Image>();
+                var serializedOnImg = new SerializedObject(onImg);
+                serializedOnImg.FindProperty("m_Sprite").objectReferenceValue = null;
+                serializedOnImg.ApplyModifiedProperties();
+                onImg.color = new Color32(themeColor.r, themeColor.g, themeColor.b, 60);
+
+                var onOutline = onTrans.GetComponent<Outline>() ?? onTrans.gameObject.AddComponent<Outline>();
+                onOutline.effectColor = themeColor;
+                onOutline.effectDistance = new Vector2(3, -3);
+            }
+        }
+
+        [MenuItem("MasterFramework/Build Month 34 High Assets")]
+        public static void BuildMonth34HighAssets()
+        {
+            string folderPath = "Assets/MasterFramework/Playable/Month34High";
             if (!AssetDatabase.IsValidFolder(folderPath))
             {
-                AssetDatabase.CreateFolder("Assets/MasterFramework/Playable", "Month36High");
+                AssetDatabase.CreateFolder("Assets/MasterFramework/Playable", "Month34High");
             }
             if (!AssetDatabase.IsValidFolder($"{folderPath}/Prefabs"))
             {
                 AssetDatabase.CreateFolder(folderPath, "Prefabs");
             }
 
-            // 1. Create LevelData ScriptableObjects for Stage 1 ~ 4 (4x6, 6x6, 7x7, 8x8)
-            CreateOrUpdateLevelData($"{folderPath}/CircuitBuildingLevelData_Stage1.asset", 4, 6, 116f, 2, new List<SpecialCellInfo>
+            // 1. Create LevelData ScriptableObjects for Stage 1 ~ 4
+            // Stage 1 (8x8)
+            CreateOrUpdateIslandLevelData($"{folderPath}/NumberIslandLevelData_Stage1.asset", 8, 8, new Vector3Int[]
             {
-                new SpecialCellInfo(0, 0, 2, 0),
-                new SpecialCellInfo(1, 3, 8, 1)
+                new Vector3Int(0, 6, 3), new Vector3Int(1, 1, 8), new Vector3Int(2, 7, 2),
+                new Vector3Int(3, 6, 1), new Vector3Int(4, 2, 3), new Vector3Int(4, 4, 2),
+                new Vector3Int(5, 3, 1), new Vector3Int(5, 7, 2), new Vector3Int(6, 1, 6),
+                new Vector3Int(7, 6, 6)
             });
 
-            CreateOrUpdateLevelData($"{folderPath}/CircuitBuildingLevelData_Stage2.asset", 6, 6, 116f, 5, new List<SpecialCellInfo>
+            // Stage 2 (5x5)
+            CreateOrUpdateIslandLevelData($"{folderPath}/NumberIslandLevelData_Stage2.asset", 5, 5, new Vector3Int[]
             {
-                new SpecialCellInfo(1, 2, 4, 1),
-                new SpecialCellInfo(1, 5, 4, 1),
-                new SpecialCellInfo(3, 2, 8, 1),
-                new SpecialCellInfo(4, 1, 8, 1),
-                new SpecialCellInfo(5, 3, 8, 1)
+                new Vector3Int(0, 2, 3), new Vector3Int(0, 4, 1), new Vector3Int(1, 3, 1),
+                new Vector3Int(2, 1, 4), new Vector3Int(4, 0, 1), new Vector3Int(4, 4, 2)
             });
 
-            CreateOrUpdateLevelData($"{folderPath}/CircuitBuildingLevelData_Stage3.asset", 7, 7, 100f, 6, new List<SpecialCellInfo>
+            // Stage 3 (6x6)
+            CreateOrUpdateIslandLevelData($"{folderPath}/NumberIslandLevelData_Stage3.asset", 6, 6, new Vector3Int[]
             {
-                new SpecialCellInfo(0, 0, 2, 1),
-                new SpecialCellInfo(1, 6, 4, 0),
-                new SpecialCellInfo(3, 3, 6, 0),
-                new SpecialCellInfo(5, 1, 6, 2),
-                new SpecialCellInfo(6, 4, 8, 2)
+                new Vector3Int(0, 0, 4), new Vector3Int(0, 5, 1), new Vector3Int(1, 4, 1),
+                new Vector3Int(3, 2, 6), new Vector3Int(4, 0, 2), new Vector3Int(4, 5, 4)
             });
 
-            CreateOrUpdateLevelData($"{folderPath}/CircuitBuildingLevelData_Stage4.asset", 8, 8, 88f, 8, new List<SpecialCellInfo>
+            // Stage 4 (10x10)
+            CreateOrUpdateIslandLevelData($"{folderPath}/NumberIslandLevelData_Stage4.asset", 10, 10, new Vector3Int[]
             {
-                new SpecialCellInfo(1, 5, 2, 1),
-                new SpecialCellInfo(2, 3, 6, 1),
-                new SpecialCellInfo(3, 1, 8, 1),
-                new SpecialCellInfo(4, 4, 5, 0),
-                new SpecialCellInfo(4, 6, 4, 1),
-                new SpecialCellInfo(5, 4, 8, 2),
-                new SpecialCellInfo(6, 2, 4, 1)
+                new Vector3Int(0, 6, 4), new Vector3Int(0, 8, 1), new Vector3Int(1, 2, 1),
+                new Vector3Int(2, 0, 6), new Vector3Int(2, 5, 4), new Vector3Int(2, 9, 2),
+                new Vector3Int(3, 3, 2), new Vector3Int(3, 8, 2), new Vector3Int(5, 3, 12),
+                new Vector3Int(6, 0, 1), new Vector3Int(7, 1, 2), new Vector3Int(8, 5, 4),
+                new Vector3Int(9, 0, 1), new Vector3Int(9, 2, 1), new Vector3Int(9, 9, 6)
             });
 
-            // 2. Open Original Scene to Extract Authentic Stage 1 Hierarchy
-            string originalScenePath = "Assets/Noisy/Scenes/ChallengePuzzle/Month36/Month36HighScene.unity";
-            var origScene = UnityEditor.SceneManagement.EditorSceneManager.OpenScene(originalScenePath, UnityEditor.SceneManagement.OpenSceneMode.Single);
+            // 2. Build Base Prefab
+            Font defaultFont = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
 
-            var stage1Source = GameObject.Find("[Root]/CanvasGroup/[MainUI]/Stage1");
-            if (stage1Source == null)
-            {
-                Debug.LogError("[PortfolioBuilderHelper] Source Stage1 not found in Month36HighScene!");
-                return;
-            }
+            GameObject rootGo = new GameObject("NumberIsland_BasePrefab", typeof(RectTransform), typeof(CanvasGroup));
+            var rootRt = rootGo.GetComponent<RectTransform>();
+            rootRt.anchorMin = Vector2.zero;
+            rootRt.anchorMax = Vector2.one;
+            rootRt.sizeDelta = Vector2.zero;
 
-            // Clone Stage 1
-            GameObject clonedStage = Object.Instantiate(stage1Source);
-            clonedStage.name = "CircuitBuilding_BasePrefab";
+            // Background Frame
+            GameObject bgGo = new GameObject("BoardFrame", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+            bgGo.transform.SetParent(rootGo.transform, false);
+            var bgRt = bgGo.GetComponent<RectTransform>();
+            bgRt.anchorMin = new Vector2(0.5f, 0.5f);
+            bgRt.anchorMax = new Vector2(0.5f, 0.5f);
+            bgRt.sizeDelta = new Vector2(680, 680);
+            bgRt.anchoredPosition = new Vector2(0, 20);
+            var bgImg = bgGo.GetComponent<Image>();
+            bgImg.color = new Color32(20, 27, 45, 255); // Dark navy board background
 
-            // Remove legacy stage component
-            var legacyMiniGameStage = clonedStage.GetComponent<CMS.WeeklyGame.MiniGameStage>();
-            if (legacyMiniGameStage != null) Object.DestroyImmediate(legacyMiniGameStage);
+            var bgOutline = bgGo.AddComponent<Outline>();
+            bgOutline.effectColor = new Color32(71, 85, 105, 180);
+            bgOutline.effectDistance = new Vector2(2, -2);
 
-            // Find authentic UI child elements
-            var levelHeaderImg = clonedStage.transform.Find("Level Header")?.GetComponent<Image>();
-            var bgTransform = clonedStage.transform.Find("Background");
-            var boardTransform = bgTransform?.Find("Board");
-            var gridLayout = boardTransform?.GetComponent<GridLayoutGroup>();
-            var legacyBoardComp = boardTransform?.GetComponent<MiniGame.CircuitBuilding.CircuitBuildingBoard>();
-            if (legacyBoardComp != null) Object.DestroyImmediate(legacyBoardComp);
+            // CellParent (GridLayoutGroup)
+            GameObject cellParentGo = new GameObject("CellParent", typeof(RectTransform), typeof(GridLayoutGroup));
+            cellParentGo.transform.SetParent(bgGo.transform, false);
+            var cpRt = cellParentGo.GetComponent<RectTransform>();
+            cpRt.anchorMin = Vector2.zero;
+            cpRt.anchorMax = Vector2.one;
+            cpRt.sizeDelta = new Vector2(-24, -24); // 12px padding all sides
+            cpRt.anchoredPosition = Vector2.zero;
 
-            // Setup CircuitParent inside Board if not already present
-            var circuitParentTransform = boardTransform?.Find("CircuitParent");
-            if (circuitParentTransform == null && boardTransform != null)
-            {
-                GameObject cpGo = new GameObject("CircuitParent", typeof(RectTransform), typeof(CanvasGroup));
-                cpGo.transform.SetParent(boardTransform, false);
-                var cpRt = cpGo.GetComponent<RectTransform>();
-                cpRt.anchorMin = Vector2.zero;
-                cpRt.anchorMax = Vector2.one;
-                cpRt.sizeDelta = Vector2.zero;
-                circuitParentTransform = cpGo.transform;
-            }
+            var gridLayout = cellParentGo.GetComponent<GridLayoutGroup>();
+            gridLayout.spacing = new Vector2(4, 4);
+            gridLayout.childAlignment = TextAnchor.MiddleCenter;
 
-            var circuitToggle = clonedStage.transform.Find("Circuit Mode Toggle")?.GetComponent<Toggle>();
-            var pillarToggle = clonedStage.transform.Find("Pillar Mode Toggle")?.GetComponent<Toggle>();
-            var checkBtn = clonedStage.transform.Find("CheckTheAnswerButton")?.GetComponent<Button>();
-            var ruleBtn = clonedStage.transform.Find("RuleButton")?.GetComponent<Button>();
-            var popupGo = clonedStage.transform.Find("Popup")?.gameObject;
-            var popupCloseBtn = popupGo?.transform.Find("Window/X Button")?.GetComponent<Button>();
-
-            // Load Original Prefabs & Level Sprites
-            var originalCellPrefab = AssetDatabase.LoadAssetAtPath<MiniGame.CircuitBuilding.CircuitBuildingCell>("Assets/Noisy/CMS/Exclude build/ChallengePuzzle/Month36/HighGrade/AnyResources/Cell.prefab");
-            var originalCircuitPrefab = AssetDatabase.LoadAssetAtPath<MiniGame.CircuitBuilding.CircuitBuildingCircuit>("Assets/Noisy/CMS/Exclude build/ChallengePuzzle/Month36/HighGrade/AnyResources/Circuit.prefab");
-
-            var sprL1 = AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Noisy/CMS/Exclude build/ChallengePuzzle/Month36/HighGrade/AnyResources/level1.png");
-            var sprL2 = AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Noisy/CMS/Exclude build/ChallengePuzzle/Month36/HighGrade/AnyResources/level2.png");
-            var sprL3 = AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Noisy/CMS/Exclude build/ChallengePuzzle/Month36/HighGrade/AnyResources/level3.png");
-            var sprL4 = AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Noisy/CMS/Exclude build/ChallengePuzzle/Month36/HighGrade/AnyResources/level4.png");
-
-            // Attach & Configure CircuitBuildingStage
-            var stage = clonedStage.GetComponent<CircuitBuildingStage>();
-            if (stage == null) stage = clonedStage.AddComponent<CircuitBuildingStage>();
+            // Attach NumberIslandStage (정답 확인은 상단 헤더 툴바로 일원화됨)
+            var stage = rootGo.AddComponent<NumberIslandStage>();
+            var cellPrefab = AssetDatabase.LoadAssetAtPath<NumberIslandCell>("Assets/MasterFramework/Playable/Month34High/Prefabs/NumberIslandCell.prefab");
+            var defaultLevelData = AssetDatabase.LoadAssetAtPath<NumberIslandLevelData>($"{folderPath}/NumberIslandLevelData_Stage1.asset");
 
             var serializedStage = new SerializedObject(stage);
-            serializedStage.FindProperty("cellPrefab").objectReferenceValue = originalCellPrefab;
-            serializedStage.FindProperty("circuitPrefab").objectReferenceValue = originalCircuitPrefab;
-            serializedStage.FindProperty("levelHeaderImage").objectReferenceValue = levelHeaderImg;
-            
-            var levelSpritesProp = serializedStage.FindProperty("levelSprites");
-            levelSpritesProp.arraySize = 4;
-            levelSpritesProp.GetArrayElementAtIndex(0).objectReferenceValue = sprL1;
-            levelSpritesProp.GetArrayElementAtIndex(1).objectReferenceValue = sprL2;
-            levelSpritesProp.GetArrayElementAtIndex(2).objectReferenceValue = sprL3;
-            levelSpritesProp.GetArrayElementAtIndex(3).objectReferenceValue = sprL4;
-
-            serializedStage.FindProperty("boardRoot").objectReferenceValue = boardTransform as RectTransform;
-            serializedStage.FindProperty("gridLayoutGroup").objectReferenceValue = gridLayout;
-            serializedStage.FindProperty("circuitParent").objectReferenceValue = circuitParentTransform;
-            serializedStage.FindProperty("checkAnswerButton").objectReferenceValue = checkBtn;
-            serializedStage.FindProperty("circuitModeToggle").objectReferenceValue = circuitToggle;
-            serializedStage.FindProperty("pillarModeToggle").objectReferenceValue = pillarToggle;
-            serializedStage.FindProperty("ruleButton").objectReferenceValue = ruleBtn;
-            serializedStage.FindProperty("popupObject").objectReferenceValue = popupGo;
-            serializedStage.FindProperty("popupCloseButton").objectReferenceValue = popupCloseBtn;
+            serializedStage.FindProperty("cellParent").objectReferenceValue = gridLayout;
+            serializedStage.FindProperty("cellPrefab").objectReferenceValue = cellPrefab;
+            serializedStage.FindProperty("levelData").objectReferenceValue = defaultLevelData;
+            serializedStage.FindProperty("checkAnswerButton").objectReferenceValue = null;
+            serializedStage.FindProperty("clearTriggerMode").enumValueIndex = (int)StageClearTriggerMode.ManualSubmitButton;
+            serializedStage.FindProperty("validationCapability").enumValueIndex = (int)ValidationCapability.Flexible;
             serializedStage.ApplyModifiedProperties();
 
-            // SubContainer setup
-            var ctx = clonedStage.GetComponent<Zenject.GameObjectContext>();
-            if (ctx == null) ctx = clonedStage.AddComponent<Zenject.GameObjectContext>();
-
-            var installer = clonedStage.GetComponent<Month36HighInstaller>();
-            if (installer == null) installer = clonedStage.AddComponent<Month36HighInstaller>();
-
+            // Zenject SubContainer setup
+            var ctx = rootGo.AddComponent<Zenject.GameObjectContext>();
+            var installer = rootGo.AddComponent<Month34HighInstaller>();
             var serializedCtx = new SerializedObject(ctx);
             var installersProp = serializedCtx.FindProperty("_monoInstallers");
             installersProp.arraySize = 1;
             installersProp.GetArrayElementAtIndex(0).objectReferenceValue = installer;
             serializedCtx.ApplyModifiedProperties();
 
-            // Save Authentic Base Prefab
-            string prefabPath = $"{folderPath}/Prefabs/CircuitBuilding_BasePrefab.prefab";
-            PrefabUtility.SaveAsPrefabAsset(clonedStage, prefabPath);
-            Object.DestroyImmediate(clonedStage);
+            // Save Prefab
+            string prefabPath = $"{folderPath}/Prefabs/NumberIsland_BasePrefab.prefab";
+            PrefabUtility.SaveAsPrefabAsset(rootGo, prefabPath);
+            Object.DestroyImmediate(rootGo);
 
-            Debug.Log("[PortfolioBuilderHelper] Successfully extracted authentic Stage1 hierarchy and saved Month 36 High Base Prefab at: " + prefabPath);
+            AssetDatabase.SaveAssets();
+            Debug.Log("[PortfolioBuilderHelper] Successfully built Month 34 High assets and BasePrefab at: " + prefabPath);
         }
 
-        private static void CreateOrUpdateLevelData(string assetPath, int row, int col, float sideLen, int fullPillar, List<SpecialCellInfo> specialCells)
+        [MenuItem("MasterFramework/Modernize Month 35 High UI")]
+        public static void ModernizeMonth35HighUI()
         {
-            var data = AssetDatabase.LoadAssetAtPath<CircuitBuildingLevelData>(assetPath);
+            string prefabPath = "Assets/Resources/Prefabs/Month35High.prefab";
+            var root = PrefabUtility.LoadPrefabContents(prefabPath);
+            if (root == null)
+            {
+                Debug.LogWarning("[PortfolioBuilderHelper] Month35High prefab not found at: " + prefabPath);
+                return;
+            }
+
+            // 1. Remove bottom duplicate panels and buttons (상단 헤더 툴바로 일원화)
+            Transform panelTrans = root.transform.Find("ControlPanel");
+            if (panelTrans != null)
+            {
+                Object.DestroyImmediate(panelTrans.gameObject);
+            }
+
+            Transform ruleTrans = root.transform.Find("RuleButton");
+            if (ruleTrans != null)
+            {
+                Object.DestroyImmediate(ruleTrans.gameObject);
+            }
+
+            Transform checkTrans = root.transform.Find("CheckTheAnswerButton");
+            if (checkTrans != null)
+            {
+                Object.DestroyImmediate(checkTrans.gameObject);
+            }
+
+            // 2. Update UniversalMinigameStage references
+            var stage = root.GetComponent<MasterFramework.Playable.Common.UniversalMinigameStage>();
+            if (stage != null)
+            {
+                var serializedStage = new SerializedObject(stage);
+                serializedStage.FindProperty("checkAnswerButton").objectReferenceValue = null;
+                serializedStage.FindProperty("ruleButton").objectReferenceValue = null;
+                serializedStage.ApplyModifiedProperties();
+            }
+
+            PrefabUtility.SaveAsPrefabAsset(root, prefabPath);
+            PrefabUtility.UnloadPrefabContents(root);
+            Debug.Log("[PortfolioBuilderHelper] Successfully modernized Month 35 High UI in: " + prefabPath);
+        }
+
+        private static void SetupButtonLabel(Transform btnTrans, string labelText, Font font)
+        {
+            Transform textTrans = btnTrans.Find("Text");
+            GameObject textGo;
+            if (textTrans == null)
+            {
+                textGo = new GameObject("Text", typeof(RectTransform), typeof(CanvasRenderer), typeof(Text));
+                textGo.transform.SetParent(btnTrans, false);
+            }
+            else
+            {
+                textGo = textTrans.gameObject;
+            }
+
+            var txtRt = textGo.GetComponent<RectTransform>();
+            txtRt.anchorMin = Vector2.zero;
+            txtRt.anchorMax = Vector2.one;
+            txtRt.sizeDelta = Vector2.zero;
+
+            var txt = textGo.GetComponent<Text>();
+            txt.font = font;
+            txt.text = labelText;
+            txt.fontSize = 15;
+            txt.fontStyle = FontStyle.Bold;
+            txt.color = Color.white;
+            txt.alignment = TextAnchor.MiddleCenter;
+            txt.raycastTarget = false;
+        }
+
+        private static Button CreateControlButton(Transform parent, string name, string label, Color32 color, Font font)
+        {
+            GameObject btnGo = new GameObject(name, typeof(RectTransform), typeof(CanvasRenderer), typeof(Image), typeof(Button));
+            btnGo.transform.SetParent(parent, false);
+            var rt = btnGo.GetComponent<RectTransform>();
+            rt.sizeDelta = new Vector2(150, 48);
+
+            var img = btnGo.GetComponent<Image>();
+            img.color = color;
+
+            var outline = btnGo.AddComponent<Outline>();
+            outline.effectColor = new Color32(255, 255, 255, 30);
+            outline.effectDistance = new Vector2(1, -1);
+
+            GameObject txtGo = new GameObject("Text", typeof(RectTransform), typeof(CanvasRenderer), typeof(Text));
+            txtGo.transform.SetParent(btnGo.transform, false);
+            var txtRt = txtGo.GetComponent<RectTransform>();
+            txtRt.anchorMin = Vector2.zero;
+            txtRt.anchorMax = Vector2.one;
+            txtRt.sizeDelta = Vector2.zero;
+
+            var txt = txtGo.GetComponent<Text>();
+            txt.font = font;
+            txt.text = label;
+            txt.fontSize = 15;
+            txt.fontStyle = FontStyle.Bold;
+            txt.color = Color.white;
+            txt.alignment = TextAnchor.MiddleCenter;
+
+            return btnGo.GetComponent<Button>();
+        }
+
+        private static Toggle CreateToggleControlButton(Transform parent, string name, string label, Font font)
+        {
+            GameObject toggleGo = new GameObject(name, typeof(RectTransform), typeof(CanvasRenderer), typeof(Image), typeof(Toggle));
+            toggleGo.transform.SetParent(parent, false);
+            var rt = toggleGo.GetComponent<RectTransform>();
+            rt.sizeDelta = new Vector2(165, 48);
+
+            var bgImg = toggleGo.GetComponent<Image>();
+            bgImg.color = new Color32(30, 41, 59, 255); // Dark slate background
+
+            var outline = toggleGo.AddComponent<Outline>();
+            outline.effectColor = new Color32(99, 102, 241, 150);
+            outline.effectDistance = new Vector2(1, -1);
+
+            // Checkmark overlay (Emerald green when ON)
+            GameObject checkmarkGo = new GameObject("Checkmark", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+            checkmarkGo.transform.SetParent(toggleGo.transform, false);
+            var cmRt = checkmarkGo.GetComponent<RectTransform>();
+            cmRt.anchorMin = Vector2.zero;
+            cmRt.anchorMax = Vector2.one;
+            cmRt.sizeDelta = Vector2.zero;
+            var cmImg = checkmarkGo.GetComponent<Image>();
+            cmImg.color = new Color32(16, 185, 129, 200);
+
+            GameObject txtGo = new GameObject("Label", typeof(RectTransform), typeof(CanvasRenderer), typeof(Text));
+            txtGo.transform.SetParent(toggleGo.transform, false);
+            var txtRt = txtGo.GetComponent<RectTransform>();
+            txtRt.anchorMin = Vector2.zero;
+            txtRt.anchorMax = Vector2.one;
+            txtRt.sizeDelta = Vector2.zero;
+
+            var txt = txtGo.GetComponent<Text>();
+            txt.font = font;
+            txt.text = label;
+            txt.fontSize = 14;
+            txt.fontStyle = FontStyle.Bold;
+            txt.color = Color.white;
+            txt.alignment = TextAnchor.MiddleCenter;
+
+            var toggle = toggleGo.GetComponent<Toggle>();
+            toggle.targetGraphic = bgImg;
+            toggle.graphic = cmImg;
+            toggle.isOn = false;
+
+            return toggle;
+        }
+
+        private static void CreateOrUpdateIslandLevelData(string assetPath, int row, int col, Vector3Int[] hints)
+        {
+            var data = AssetDatabase.LoadAssetAtPath<NumberIslandLevelData>(assetPath);
             if (data == null)
             {
-                data = ScriptableObject.CreateInstance<CircuitBuildingLevelData>();
+                data = ScriptableObject.CreateInstance<NumberIslandLevelData>();
                 AssetDatabase.CreateAsset(data, assetPath);
             }
-            data.rowCount = row;
-            data.columnCount = col;
-            data.cellSideLength = sideLen;
-            data.fullPillarCount = fullPillar;
-            data.specialCells = specialCells;
+            data.SetData(row, col, hints);
             EditorUtility.SetDirty(data);
         }
 
@@ -407,11 +592,10 @@ namespace MasterFramework.Editor
                 gonuOutline = ScriptableObject.CreateInstance<LessonOutline>();
                 AssetDatabase.CreateAsset(gonuOutline, gonuPath);
             }
-            gonuOutline.levelCode = "Gonu";
-            gonuOutline.lessonId = "Gonu_AI";
+            gonuOutline.lessonId = "Why02_Week11_Gonu";
             gonuOutline.steps = new List<PageStepInfo>();
 
-            var gonuPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/MasterFramework/Playable/Gonu/GonuStage_BasePrefab.prefab");
+            var gonuPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/MasterFramework/Playable/Why02_Gonu/GonuStage_BasePrefab.prefab");
             string[] gonuStepNames = new string[] { "1단계: 유불리 판별 퍼즐 1", "2단계: 유불리 판별 퍼즐 2", "3단계: 우물고누 AI 실전 대전" };
             for (int i = 0; i < 3; i++)
             {
@@ -429,39 +613,39 @@ namespace MasterFramework.Editor
             }
             EditorUtility.SetDirty(gonuOutline);
 
-            // 3. Month 36 High (CircuitBuilding) Outline
-            string m36Path = $"{folderPath}/LessonOutline_Month36High.asset";
-            var m36Outline = AssetDatabase.LoadAssetAtPath<LessonOutline>(m36Path);
-            if (m36Outline == null)
+            // 3. Month 34 High (NumberIsland) Outline
+            string m34Path = $"{folderPath}/LessonOutline_Month34High.asset";
+            var m34Outline = AssetDatabase.LoadAssetAtPath<LessonOutline>(m34Path);
+            if (m34Outline == null)
             {
-                m36Outline = ScriptableObject.CreateInstance<LessonOutline>();
-                AssetDatabase.CreateAsset(m36Outline, m36Path);
+                m34Outline = ScriptableObject.CreateInstance<LessonOutline>();
+                AssetDatabase.CreateAsset(m34Outline, m34Path);
             }
-            m36Outline.lessonId = "Month36High";
-            m36Outline.steps = new List<PageStepInfo>();
+            m34Outline.lessonId = "Month34High";
+            m34Outline.steps = new List<PageStepInfo>();
 
-            var m36BasePrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/MasterFramework/Playable/Month36High/Prefabs/CircuitBuilding_BasePrefab.prefab");
-            string[] m36StepNames = new string[] { "Stage 1 (4x6)", "Stage 2 (6x6)", "Stage 3 (7x7)", "Stage 4 (8x8)" };
+            var m34BasePrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/MasterFramework/Playable/Month34High/Prefabs/NumberIsland_BasePrefab.prefab");
+            string[] m34StepNames = new string[] { "Stage 1 (8x8)", "Stage 2 (5x5)", "Stage 3 (6x6)", "Stage 4 (10x10)" };
             for (int i = 1; i <= 4; i++)
             {
-                var lData = AssetDatabase.LoadAssetAtPath<CircuitBuildingLevelData>($"Assets/MasterFramework/Playable/Month36High/CircuitBuildingLevelData_Stage{i}.asset");
+                var lData = AssetDatabase.LoadAssetAtPath<NumberIslandLevelData>($"Assets/MasterFramework/Playable/Month34High/NumberIslandLevelData_Stage{i}.asset");
                 var step = new PageStepInfo
                 {
                     stepIndex = i - 1,
                     actCode = $"ACT0{i}",
-                    stepName = m36StepNames[i - 1],
+                    stepName = m34StepNames[i - 1],
                     isDynamicGeneration = true,
-                    stageTemplatePrefab = m36BasePrefab,
-                    stagePrefab = m36BasePrefab,
+                    stageTemplatePrefab = m34BasePrefab,
+                    stagePrefab = m34BasePrefab,
                     levelData = lData,
                     requiresVideo = false,
                     videoSlotIndex = -1
                 };
-                m36Outline.steps.Add(step);
+                m34Outline.steps.Add(step);
             }
-            EditorUtility.SetDirty(m36Outline);
+            EditorUtility.SetDirty(m34Outline);
 
-            // 4. Seesaw Outline
+            // 4. Month 35 High (PlaySeesaw) Outline
             string m35Path = $"{folderPath}/LessonOutline_Month35High.asset";
             var m35Outline = AssetDatabase.LoadAssetAtPath<LessonOutline>(m35Path);
             if (m35Outline == null)
@@ -469,15 +653,14 @@ namespace MasterFramework.Editor
                 m35Outline = ScriptableObject.CreateInstance<LessonOutline>();
                 AssetDatabase.CreateAsset(m35Outline, m35Path);
             }
-            m35Outline.levelCode = "Seesaw";
-            m35Outline.lessonId = "Seesaw_Balance";
+            m35Outline.lessonId = "Month35High";
             m35Outline.steps = new List<PageStepInfo>();
 
             var m35BasePrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Resources/Prefabs/Month35High.prefab");
             string[] m35StepNames = new string[] { "Stage 1 (4x5)", "Stage 2 (4x6)", "Stage 3 (4x5)", "Stage 4 (5x5)" };
             for (int i = 1; i <= 4; i++)
             {
-                var lData = AssetDatabase.LoadAssetAtPath<PlaySeesawLevelData>($"Assets/MasterFramework/Playable/Seesaw/PlaySeesawLevelData_Stage{i}.asset");
+                var lData = AssetDatabase.LoadAssetAtPath<Portfolio.Playable.Month35High.PlaySeesawLevelData>($"Assets/MasterFramework/Playable/Month35High/PlaySeesawLevelData_Stage{i}.asset");
                 var step = new PageStepInfo
                 {
                     stepIndex = i - 1,
@@ -504,10 +687,10 @@ namespace MasterFramework.Editor
             string folderPath = "Assets/MasterFramework/Navigation/Outlines";
             var m10LessonOutline = AssetDatabase.LoadAssetAtPath<LessonOutline>($"{folderPath}/LessonOutline_Month10High.asset");
             var gonuLessonOutline = AssetDatabase.LoadAssetAtPath<LessonOutline>($"{folderPath}/LessonOutline_Gonu.asset");
-            var m36LessonOutline = AssetDatabase.LoadAssetAtPath<LessonOutline>($"{folderPath}/LessonOutline_Month36High.asset");
+            var m34LessonOutline = AssetDatabase.LoadAssetAtPath<LessonOutline>($"{folderPath}/LessonOutline_Month34High.asset");
             var m35LessonOutline = AssetDatabase.LoadAssetAtPath<LessonOutline>($"{folderPath}/LessonOutline_Month35High.asset");
 
-            // 1. Seesaw GameOutline
+            // 1. Month 35 High GameOutline
             string path1 = $"{folderPath}/GameOutline_Month35High.asset";
             var outline1 = AssetDatabase.LoadAssetAtPath<PortfolioGameOutline>(path1);
             if (outline1 == null)
@@ -515,42 +698,42 @@ namespace MasterFramework.Editor
                 outline1 = ScriptableObject.CreateInstance<PortfolioGameOutline>();
                 AssetDatabase.CreateAsset(outline1, path1);
             }
-            outline1.gameId = "Seesaw_Balance";
-            outline1.gameTitle = "시소 균형 논리 퍼즐";
-            outline1.subtitle = "Seesaw Balance Logic Puzzle";
-            outline1.generationTag = "Logic Puzzle";
-            outline1.systemSummary = "지레 모멘트(거리 × 무게)에 따른 수평 평형 공식과 행/열/프레임 제약 조건에 맞춰 숫자 블록을 배치하는 격자 논리 퍼즐입니다.";
+            outline1.gameId = "Month35High";
+            outline1.gameTitle = "시소 논리 퍼즐";
+            outline1.subtitle = "Play Seesaw";
+            outline1.generationTag = "Gen 2 Minigame";
+            outline1.systemSummary = "시소의 수평 평형 공식과 행/열/프레임 조건에 맞춰 숫자 블록을 배치하는 격자 논리 퍼즐입니다.";
             outline1.featurePoints = new string[]
             {
                 "지레 모멘트(거리 × 무게) 계산 기반 실시간 수평 균형 판정",
-                "격자형 키패드 입력, 행/열/프레임 제약 검증 및 Auto-Solve"
+                "격자형 키패드 입력 및 행/열/프레임 제약 조건 검증"
             };
             outline1.hasAutoSolve = true;
             outline1.totalStages = 4;
             outline1.lessonOutline = m35LessonOutline;
             EditorUtility.SetDirty(outline1);
 
-            // 2. Month 36 High GameOutline
-            string path2 = $"{folderPath}/GameOutline_Month36High.asset";
+            // 2. Month 34 High GameOutline
+            string path2 = $"{folderPath}/GameOutline_Month34High.asset";
             var outline2 = AssetDatabase.LoadAssetAtPath<PortfolioGameOutline>(path2);
             if (outline2 == null)
             {
                 outline2 = ScriptableObject.CreateInstance<PortfolioGameOutline>();
                 AssetDatabase.CreateAsset(outline2, path2);
             }
-            outline2.gameId = "Month36High";
-            outline2.gameTitle = "회로 연결 퍼즐";
-            outline2.subtitle = "Circuit Building";
-            outline2.generationTag = "Logic Puzzle";
-            outline2.systemSummary = "기둥 시선 힌트를 만족하며 모든 회로 타일을 끊김 없는 단일 폐회로로 연결하는 논리 퍼즐입니다.";
+            outline2.gameId = "Month34High";
+            outline2.gameTitle = "숫자 섬 나누기 퍼즐";
+            outline2.subtitle = "Number Island";
+            outline2.generationTag = "Gen 2 Minigame";
+            outline2.systemSummary = "각 숫자를 면적으로 갖는 직사각형 섬으로 격자를 분할하고, 바다와 섬의 연결성을 검증하는 논리 퍼즐입니다.";
             outline2.featurePoints = new string[]
             {
-                "4방향 회로 타일의 단자 연결 상태 및 폐회로 실시간 검증",
-                "전구-배터리 간 경로 완성 시 점등 및 클리어 시각화"
+                "단일 숫자 포함 직사각형 섬 유효성 및 2x2 바다 영역 방지 알고리즘",
+                "BFS 기반 섬 대각선 네트워크 연결성 판정 및 Undo/Redo Memento 시스템"
             };
             outline2.hasAutoSolve = true;
             outline2.totalStages = 4;
-            outline2.lessonOutline = m36LessonOutline;
+            outline2.lessonOutline = m34LessonOutline;
             EditorUtility.SetDirty(outline2);
 
             // 3. Gonu AI GameOutline
@@ -561,15 +744,15 @@ namespace MasterFramework.Editor
                 outline3 = ScriptableObject.CreateInstance<PortfolioGameOutline>();
                 AssetDatabase.CreateAsset(outline3, path3);
             }
-            outline3.gameId = "Gonu_AI";
-            outline3.gameTitle = "전통 고누 AI 대전";
-            outline3.subtitle = "Traditional Board Game & Minimax AI";
-            outline3.generationTag = "Strategy AI";
-            outline3.systemSummary = "전통 말판 놀이(삼목/우물/세기) 규칙에 따라 말을 이동시켜 상대방의 경로를 차단하거나 승리 조건을 달성하는 턴제 전략 보드게임 및 Minimax 기반 로컬 AI입니다.";
+            outline3.gameId = "Why02_Gonu";
+            outline3.gameTitle = "우물고누 전통놀이";
+            outline3.subtitle = "Traditional Board Game";
+            outline3.generationTag = "Why 02";
+            outline3.systemSummary = "전통 말판 놀이 규칙에 따라 말을 이동시켜 상대방의 이동 경로를 차단하는 턴제 보드게임입니다.";
             outline3.featurePoints = new string[]
             {
                 "말판 노드 기반 유효 이동 경로 검증 및 포위 승패 판정",
-                "턴 제어 FSM 및 Minimax AI 휴리스틱 의사결정 엔진"
+                "턴 제어 FSM 및 말 위치 스냅샷 복원 시스템"
             };
             outline3.hasAutoSolve = false;
             outline3.totalStages = 3;
@@ -620,7 +803,7 @@ namespace MasterFramework.Editor
             {
                 var serializedStageMgr = new SerializedObject(stageMgr);
                 var outlineProp = serializedStageMgr.FindProperty("lessonOutline");
-                var defaultOutline = AssetDatabase.LoadAssetAtPath<LessonOutline>("Assets/MasterFramework/Navigation/Outlines/LessonOutline_Month35High.asset");
+                var defaultOutline = AssetDatabase.LoadAssetAtPath<LessonOutline>("Assets/MasterFramework/Navigation/Outlines/LessonOutline_Month10High.asset");
                 if (outlineProp != null && defaultOutline != null)
                 {
                     outlineProp.objectReferenceValue = defaultOutline;
@@ -759,20 +942,52 @@ namespace MasterFramework.Editor
             archTxt.color = Color.white;
             archTxt.alignment = TextAnchor.MiddleCenter;
 
-            // 3. Card Parent (Horizontal Flex Layout)
-            GameObject cardParentGo = new GameObject("CardParent", typeof(RectTransform), typeof(HorizontalLayoutGroup));
-            cardParentGo.transform.SetParent(canvasGo.transform, false);
+            // 3. Card Parent (Wrapped in Horizontal ScrollView)
+            GameObject scrollViewGo = new GameObject("CardScrollView", typeof(RectTransform), typeof(ScrollRect));
+            scrollViewGo.transform.SetParent(canvasGo.transform, false);
+            var svRt = scrollViewGo.GetComponent<RectTransform>();
+            svRt.anchorMin = new Vector2(0.04f, 0.12f);
+            svRt.anchorMax = new Vector2(0.96f, 0.78f);
+            svRt.anchoredPosition = Vector2.zero;
+            svRt.sizeDelta = Vector2.zero;
+
+            var scrollRect = scrollViewGo.GetComponent<ScrollRect>();
+            scrollRect.horizontal = true;
+            scrollRect.vertical = false;
+            scrollRect.movementType = ScrollRect.MovementType.Elastic;
+            scrollRect.elasticity = 0.1f;
+            scrollRect.scrollSensitivity = 40f;
+
+            GameObject viewportGo = new GameObject("Viewport", typeof(RectTransform), typeof(RectMask2D));
+            viewportGo.transform.SetParent(scrollViewGo.transform, false);
+            var vpRt = viewportGo.GetComponent<RectTransform>();
+            vpRt.anchorMin = Vector2.zero;
+            vpRt.anchorMax = Vector2.one;
+            vpRt.sizeDelta = Vector2.zero;
+            vpRt.pivot = new Vector2(0, 0.5f);
+
+            scrollRect.viewport = vpRt;
+
+            GameObject cardParentGo = new GameObject("CardParent", typeof(RectTransform), typeof(HorizontalLayoutGroup), typeof(ContentSizeFitter));
+            cardParentGo.transform.SetParent(viewportGo.transform, false);
             var cpRt = cardParentGo.GetComponent<RectTransform>();
-            cpRt.anchorMin = new Vector2(0.04f, 0.1f);
-            cpRt.anchorMax = new Vector2(0.96f, 0.78f);
+            cpRt.anchorMin = new Vector2(0, 0);
+            cpRt.anchorMax = new Vector2(0, 1);
+            cpRt.pivot = new Vector2(0, 0.5f);
             cpRt.anchoredPosition = Vector2.zero;
-            cpRt.sizeDelta = Vector2.zero;
+
+            var fitter = cardParentGo.GetComponent<ContentSizeFitter>();
+            fitter.horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
+            fitter.verticalFit = ContentSizeFitter.FitMode.Unconstrained;
 
             var layout = cardParentGo.GetComponent<HorizontalLayoutGroup>();
-            layout.spacing = 24;
-            layout.childAlignment = TextAnchor.MiddleCenter;
+            layout.spacing = 20;
+            layout.padding = new RectOffset(20, 40, 0, 0);
+            layout.childAlignment = TextAnchor.MiddleLeft;
             layout.childControlWidth = false;
             layout.childControlHeight = false;
+
+            scrollRect.content = cpRt;
 
             // 4. Footer Note
             GameObject footerGo = new GameObject("FooterNote", typeof(RectTransform), typeof(CanvasRenderer), typeof(Text));
@@ -793,7 +1008,10 @@ namespace MasterFramework.Editor
             var lobbyMgr = lobbyMgrGo.GetComponent<PortfolioLobbyManager>();
 
             var m35Outline = AssetDatabase.LoadAssetAtPath<PortfolioGameOutline>("Assets/MasterFramework/Navigation/Outlines/GameOutline_Month35High.asset");
+            var m34Outline = AssetDatabase.LoadAssetAtPath<PortfolioGameOutline>("Assets/MasterFramework/Navigation/Outlines/GameOutline_Month34High.asset");
             var gonuOutline = AssetDatabase.LoadAssetAtPath<PortfolioGameOutline>("Assets/MasterFramework/Navigation/Outlines/GameOutline_Gonu.asset");
+            var m10Outline = AssetDatabase.LoadAssetAtPath<PortfolioGameOutline>("Assets/MasterFramework/Navigation/Outlines/GameOutline_Month10High.asset");
+            var m22Outline = AssetDatabase.LoadAssetAtPath<PortfolioGameOutline>("Assets/MasterFramework/Navigation/Outlines/GameOutline_Month22Low.asset");
 
             var serializedLobby = new SerializedObject(lobbyMgr);
             serializedLobby.FindProperty("cardParent").objectReferenceValue = cardParentGo.transform;
@@ -801,9 +1019,12 @@ namespace MasterFramework.Editor
             serializedLobby.FindProperty("archOverviewButton").objectReferenceValue = archBtnGo.GetComponent<Button>();
             
             var gamesProp = serializedLobby.FindProperty("availableGames");
-            gamesProp.arraySize = 2;
+            gamesProp.arraySize = 5;
             gamesProp.GetArrayElementAtIndex(0).objectReferenceValue = m35Outline;
-            gamesProp.GetArrayElementAtIndex(1).objectReferenceValue = gonuOutline;
+            gamesProp.GetArrayElementAtIndex(1).objectReferenceValue = m34Outline;
+            gamesProp.GetArrayElementAtIndex(2).objectReferenceValue = gonuOutline;
+            gamesProp.GetArrayElementAtIndex(3).objectReferenceValue = m10Outline;
+            gamesProp.GetArrayElementAtIndex(4).objectReferenceValue = m22Outline;
             serializedLobby.ApplyModifiedProperties();
 
             bool saved = UnityEditor.SceneManagement.EditorSceneManager.SaveScene(lobbyScene, lobbyPath);

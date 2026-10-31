@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d15fbdfa4b125246aab01ad410e52222, type: 3}
+  m_Name: PlayableLevelData_Stage2
+  m_EditorClassIdentifier: Assembly-CSharp::MasterFramework.Core.PlayableLevelData
+  rows: 9
+  cols: 9
+  signMap:
+  - 000003010
+  - 000000303
+  - 020300000
+  - 000000002
+  - 101000010
+  - 000000200
+  - 203000020
+  - 000003000
+  - 300120033
+  presetFrames:
+  - startIdices: {x: 1, y: 5}
+    endIdices: {x: 3, y: 7}
+  - startIdices: {x: 7, y: 5}
+    endIdices: {x: 8, y: 6}
+  validationRule: 0
+  cellSpacing: 5

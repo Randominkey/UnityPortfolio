@@ -105,27 +105,14 @@ InitTestScene*.unity*
 # Auto-generated cache in Assets folder
 /[Aa]ssets/[Ss]ceneDependencyCache*
 
-# Internal R&D, Logs, and Analysis Reports (Preserved in Local Workspace Only)
-/_Portfolio_Refactoring_Plans/analysis/
-/_Portfolio_Refactoring_Plans/scratch/
-/_Portfolio_Refactoring_Plans/logs/
-/_Portfolio_Refactoring_Plans/*작업물*.md
-
-# Staged / In-Development Contents (Local Isolation)
-/[Aa]ssets/MasterFramework/Playable/Month10High/
-/[Aa]ssets/MasterFramework/Playable/Month10High.meta
-/[Aa]ssets/MasterFramework/Playable/Month36High/
-/[Aa]ssets/MasterFramework/Playable/Month36High.meta
-/[Aa]ssets/MasterFramework/Playable/Prefabs/
-/[Aa]ssets/MasterFramework/Playable/Prefabs.meta
-/[Aa]ssets/MasterFramework/Navigation/Outlines/GameOutline_Month10High*
-/[Aa]ssets/MasterFramework/Navigation/Outlines/GameOutline_Month36High*
-/[Aa]ssets/MasterFramework/Navigation/Outlines/LessonOutline_Month10High*
-/[Aa]ssets/MasterFramework/Navigation/Outlines/LessonOutline_Month36High*
-
 # Legacy Raw Unported Dumps & Scenes (Option A: Ported modules extracted to Assets/MasterFramework/Playable/)
-/[Aa]ssets/Noisy/CMS/
-/[Aa]ssets/Noisy/CMS.meta
+/[Aa]ssets/Noisy/CMS/Exclude build/
+/[Aa]ssets/Noisy/CMS/Exclude build.meta
 /[Aa]ssets/Noisy/Scenes/
 /[Aa]ssets/Noisy/Scenes.meta
 
+# Local Working Logs & Dev Tooling (Keep local, exclude from public repository)
+/.agent/
+/.agents/
+/_Portfolio_Refactoring_Plans/
+/scripts/

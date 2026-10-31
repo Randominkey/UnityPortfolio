@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 45e683b72d6ed854a8faa19f5fe9cf1c, type: 3}
+  m_Name: GameOutline_Month22Low
+  m_EditorClassIdentifier: MasterFramework.Core::MasterFramework.Navigation.PortfolioGameOutline
+  gameId: Month22Low
+  gameTitle: "\uB4F1\uB300 \uBD88\uBE5B \uB17C\uB9AC \uD37C\uC990"
+  subtitle: Lighthouse Puzzle
+  systemSummary: "십자 축 시야 투사로 등대를 관측하고 전역 목표 개수를 만족하는 퍼즐입니다."
+  featurePoints:
+  - "반응형 십자 감시"
+  - "전역 수량 복합 제약"
+  generationTag: Gen 2 Minigame
+  hasAutoSolve: 1
+  totalStages: 4
+  thumbnail: {fileID: 0}
+  lessonOutline: {fileID: 11400000, guid: 6faeb8b1835bda74e9580340387ab4cc, type: 2}

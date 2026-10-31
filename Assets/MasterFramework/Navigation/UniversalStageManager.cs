@@ -45,6 +45,7 @@ namespace MasterFramework.Navigation
         private UniversalRuleModal _ruleModal;
         private UniversalFeedbackOverlay _feedbackOverlay;
         private TechInspectorPanel _techInspectorPanel;
+        private bool _isAutoClearEnabled = false;
 
         [Inject]
         public void Construct(IAPIService apiService, LessonSessionContext sessionContext)
@@ -174,7 +175,7 @@ namespace MasterFramework.Navigation
             rightRt.anchorMax = new Vector2(1, 1);
             rightRt.pivot = new Vector2(1, 0.5f);
             rightRt.anchoredPosition = new Vector2(-16, 0);
-            rightRt.sizeDelta = new Vector2(340, 0);
+            rightRt.sizeDelta = new Vector2(620, 0);
 
             HorizontalLayoutGroup rightHlg = rightContainer.GetComponent<HorizontalLayoutGroup>();
             rightHlg.spacing = 8;
@@ -232,6 +233,8 @@ namespace MasterFramework.Navigation
             _masterFrameHUD.OnUndoClicked = () => PerformUndo();
             _masterFrameHUD.OnRedoClicked = () => PerformRedo();
             _masterFrameHUD.OnSoundToggleClicked = () => ToggleSound();
+            _masterFrameHUD.OnCheckAnswerClicked = () => PerformCheckAnswer();
+            _masterFrameHUD.OnAutoClearToggled = (isOn) => HandleAutoClearToggled(isOn);
             _masterFrameHUD.SetSoundMuted(AudioService.Instance.IsMuted);
 
             // 2. Universal Rule Modal
@@ -706,6 +709,25 @@ namespace MasterFramework.Navigation
             {
                 _masterFrameHUD.UpdateTabVisuals(gameId, stepIndex);
             }
+
+            if (_activeStage is ICheckableStage checkableStage)
+            {
+                bool canAuto = checkableStage.SupportsAutoClear;
+                if (_masterFrameHUD != null)
+                {
+                    _masterFrameHUD.SetAutoClearToggleInteractable(canAuto);
+                    _masterFrameHUD.SetAutoClearToggle(canAuto ? _isAutoClearEnabled : false);
+                }
+                checkableStage.SetAutoClearMode(canAuto && _isAutoClearEnabled);
+            }
+            else
+            {
+                if (_masterFrameHUD != null)
+                {
+                    _masterFrameHUD.SetAutoClearToggleInteractable(false);
+                    _masterFrameHUD.SetAutoClearToggle(false);
+                }
+            }
         }
 
         private IDisposable _undoHistorySub;
@@ -737,6 +759,39 @@ namespace MasterFramework.Navigation
                 {
                     _masterFrameHUD.SetUndoRedoState(false, false);
                 }
+            }
+        }
+
+        private void PerformCheckAnswer()
+        {
+            AudioService.Instance.PlaySfx(SfxType.Click);
+
+            if (_activeStage is ICheckableStage checkable)
+            {
+                bool isCorrect = checkable.CheckAnswer();
+                if (isCorrect)
+                {
+                    HandleStageClearAsync(CurrentStepIndex.Value).Forget();
+                }
+            }
+            else if (_activeStage != null)
+            {
+                var t = _activeStage.GetType();
+                var m = t.GetMethod("OnCheckAnswerClicked", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
+                     ?? t.GetMethod("CheckAnswerAndSubmit", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
+                     ?? t.GetMethod("EvaluateQuizAnswer", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+                m?.Invoke(_activeStage, null);
+            }
+        }
+
+        private void HandleAutoClearToggled(bool isOn)
+        {
+            _isAutoClearEnabled = isOn;
+            AudioService.Instance.PlaySfx(SfxType.Click);
+
+            if (_activeStage is ICheckableStage checkable)
+            {
+                checkable.SetAutoClearMode(isOn);
             }
         }
 

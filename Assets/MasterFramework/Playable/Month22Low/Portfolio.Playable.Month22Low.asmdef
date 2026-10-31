@@ -1,0 +1,21 @@
+{
+    "name": "Portfolio.Playable.Month22Low",
+    "rootNamespace": "MiniGame.Lighthouse",
+    "references": [
+        "MasterFramework.Core",
+        "MasterFramework.Playable.Common",
+        "Zenject",
+        "UniRx",
+        "UniTask",
+        "Noisy.Legacy"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

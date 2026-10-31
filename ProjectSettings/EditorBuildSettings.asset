@@ -11,6 +11,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/MasterSandbox.unity
     guid: 8020a235d117c3541944d30d13508666
+  - enabled: 1
+    path: Assets/MasterFramework/Showcase/Scenes/UGUIShowcaseScene.unity
+    guid: e76f3f080bb74ae4f89b4336b2913a38
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_UseUCBPForAssetBundles: 0

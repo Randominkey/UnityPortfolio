@@ -15,7 +15,9 @@ namespace MasterFramework.Core
         Redo,
         SuccessStar,
         StageClear,
-        Error
+        Error,
+        CellHover,  // ASMR 미세 공기방울 스침 (호버)
+        CellPop     // ASMR 쫀득한 왁뿌볼 뽁뽁이 팝 (클릭)
     }
 
     public interface IAudioService
@@ -24,6 +26,7 @@ namespace MasterFramework.Core
         IReadOnlyReactiveProperty<bool> IsMutedProperty { get; }
 
         void PlaySfx(SfxType sfxType);
+        void PlaySfx(SfxType sfxType, float volumeScale, float pitch);
         void ToggleMute();
         void SetMute(bool mute);
     }
@@ -42,7 +45,7 @@ namespace MasterFramework.Core
                 if (_instance == null)
                 {
                     var go = new GameObject("[AudioService]", typeof(AudioSource), typeof(AudioService));
-                    DontDestroyOnLoad(go);
+                    if (Application.isPlaying) DontDestroyOnLoad(go);
                     _instance = go.GetComponent<AudioService>();
                 }
                 return _instance;
@@ -65,7 +68,7 @@ namespace MasterFramework.Core
             }
 
             _instance = this;
-            DontDestroyOnLoad(gameObject);
+            if (Application.isPlaying) DontDestroyOnLoad(gameObject);
 
             _audioSource = GetComponent<AudioSource>();
             if (_audioSource == null) _audioSource = gameObject.AddComponent<AudioSource>();
@@ -76,11 +79,26 @@ namespace MasterFramework.Core
 
         public void PlaySfx(SfxType sfxType)
         {
+            PlaySfx(sfxType, 1.0f, 1.0f);
+        }
+
+        public void PlaySfx(SfxType sfxType, float volumeScale, float pitch)
+        {
             if (IsMuted) return;
 
             if (_clipCache.TryGetValue(sfxType, out var clip))
             {
-                _audioSource.PlayOneShot(clip, 0.7f);
+                if (Mathf.Approximately(pitch, 1.0f))
+                {
+                    _audioSource.PlayOneShot(clip, volumeScale * 0.7f);
+                }
+                else
+                {
+                    float prevPitch = _audioSource.pitch;
+                    _audioSource.pitch = pitch;
+                    _audioSource.PlayOneShot(clip, volumeScale * 0.7f);
+                    _audioSource.pitch = prevPitch;
+                }
             }
         }
 
@@ -164,6 +182,29 @@ namespace MasterFramework.Core
                 float freq = 180f;
                 float env = Mathf.Sin(Mathf.PI * (t / dur));
                 return (Mathf.Sin(2 * Mathf.PI * freq * t) > 0 ? 1f : -1f) * env * 0.3f; // Square wave buzz
+            });
+
+            // [ASMR] 마우스 호버 시 은은한 공기방울 미세 스침 (초경량 틱/블립)
+            _clipCache[SfxType.CellHover] = CreateWaveform("SFX_CellHover", sampleRate, 0.024f, (t, dur) =>
+            {
+                float p = t / dur;
+                float freq = Mathf.Lerp(1300f, 650f, p * p);
+                float env = Mathf.Sin(Mathf.PI * p) * (1f - p * 0.3f);
+                return Mathf.Sin(2 * Mathf.PI * freq * t) * env * 0.15f; // 극히 은은한 볼륨
+            });
+
+            // [ASMR] 왁뿌볼/에어캡 뽁뽁이 터지는 쫀득한 청각 자극음 (파열 팝)
+            _clipCache[SfxType.CellPop] = CreateWaveform("SFX_CellPop", sampleRate, 0.046f, (t, dur) =>
+            {
+                float p = t / dur;
+                // 빠른 기압 강하 주파수 (720Hz -> 170Hz)
+                float freq = Mathf.Lerp(720f, 170f, Mathf.Sqrt(p));
+                // 탄성 질감을 위한 2차 배음 살짝 가미
+                float tone1 = Mathf.Sin(2 * Mathf.PI * freq * t);
+                float tone2 = Mathf.Sin(2 * Mathf.PI * (freq * 1.8f) * t) * 0.25f;
+                // 앞쪽 5ms 급속 어택 후 부드러운 감쇠
+                float env = p < 0.12f ? (p / 0.12f) : Mathf.Pow(1f - p, 1.8f);
+                return (tone1 + tone2) * env * 0.55f;
             });
         }
 
